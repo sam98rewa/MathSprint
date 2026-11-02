@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MathSprint</title>
-  <meta name="theme-color" content="#f2f5fd">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236d8dff'/%3E%3Cstop offset='1' stop-color='%23b06dff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='46' font-size='40' font-weight='700' text-anchor='middle' fill='white' font-family='Arial,sans-serif'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
+  <script>try{var t=localStorage.getItem('mathsprint-theme')||localStorage.getItem('speedymath-theme');document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');}catch(e){}</script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,6 +15,7 @@
     <span class="sym s4">%</span><span class="sym s5">π</span><span class="sym s6">×</span>
     <span class="sym s7">+</span><span class="sym s8">x²</span>
   </div>
+
   <header class="site-header">
     <a class="brand" href="#" id="brandHome" aria-label="Home">
       <span class="brand-mark"><i class="ic-logo">∑</i><svg class="ic-home" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg></span>
@@ -23,55 +24,102 @@
     <span class="hdr-title" id="hdrTitle"></span>
     <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" title="Toggle theme">☀</button>
   </header>
+
   <main>
+    <!-- HOME -->
     <section id="home">
+      <h1 class="sr-only">MathSprint: mental maths practice</h1>
       <blockquote class="quote">
         <span class="quote-mark">“</span>
         If you can do <b>2 + 3</b>, you can do <span class="grad">anything.</span>
       </blockquote>
+
       <div class="section-heading"><h2>Practice</h2><span>Tap a drill to start instantly</span></div>
+
       <section class="home-grid">
-        <button class="tile t-blue" data-mode="addition"><span class="tile-icon">＋</span><h3>Addition</h3></button>
-        <button class="tile t-orange" data-mode="subtraction"><span class="tile-icon">−</span><h3>Subtraction</h3></button>
-        <button class="tile t-purple" data-mode="multiplication"><span class="tile-icon">×</span><h3>Multiplication</h3></button>
-        <button class="tile t-green" data-mode="square"><span class="tile-icon">x²</span><h3>Squares</h3></button>
-        <button class="tile t-pink" data-mode="cube"><span class="tile-icon">x³</span><h3>Cubes</h3></button>
-        <button class="tile t-teal" data-mode="table"><span class="tile-icon">▦</span><h3>Tables</h3></button>
-        <button class="tile t-gold" data-mode="bodmas"><span class="tile-icon">( )</span><h3>BODMAS</h3></button>
-        <button class="tile t-red" data-mode="mix"><span class="tile-icon">±</span><h3>Add &amp; Sub Mix</h3></button>
+        <button class="tile t-blue" data-mode="addition">
+          <span class="tile-icon">＋</span><h3>Addition</h3>
+        </button>
+        <button class="tile t-orange" data-mode="subtraction">
+          <span class="tile-icon">−</span><h3>Subtraction</h3>
+        </button>
+        <button class="tile t-purple" data-mode="multiplication">
+          <span class="tile-icon">×</span><h3>Multiplication</h3>
+        </button>
+        <button class="tile t-green" data-mode="square">
+          <span class="tile-icon">x²</span><h3>Squares</h3>
+        </button>
+        <button class="tile t-pink" data-mode="cube">
+          <span class="tile-icon">x³</span><h3>Cubes</h3>
+        </button>
+        <button class="tile t-teal" data-mode="table">
+          <span class="tile-icon">▦</span><h3>Tables</h3>
+        </button>
+        <button class="tile t-gold" data-mode="bodmas">
+          <span class="tile-icon">( )</span><h3>BODMAS</h3>
+        </button>
+        <button class="tile t-red" data-mode="mix">
+          <span class="tile-icon">±</span><h3>Add &amp; Sub Mix</h3>
+        </button>
       </section>
+
       <div class="section-heading"><h2>Remember</h2><span>Learn and Try</span></div>
+
       <section class="home-grid">
-        <button class="tile t-green" data-remember="square"><span class="tile-icon">x²</span><h3>Squares</h3></button>
-        <button class="tile t-pink" data-remember="cube"><span class="tile-icon">x³</span><h3>Cubes</h3></button>
-        <button class="tile t-teal" data-remember="table"><span class="tile-icon">▦</span><h3>Tables</h3></button>
+        <button class="tile t-green" data-remember="square">
+          <span class="tile-icon">x²</span><h3>Squares</h3>
+        </button>
+        <button class="tile t-pink" data-remember="cube">
+          <span class="tile-icon">x³</span><h3>Cubes</h3>
+        </button>
+        <button class="tile t-teal" data-remember="table">
+          <span class="tile-icon">▦</span><h3>Tables</h3>
+        </button>
       </section>
     </section>
+
+    <!-- PRACTICE -->
     <section id="practice" hidden>
       <div class="toolbar">
         <button class="btn ghost" id="back" type="button">← Home</button>
         <h1 id="modeTitle">Addition</h1>
+
         <div class="dd" id="dd1">
-          <button class="btn dd-btn" id="dd1Btn" type="button"><b id="levelLabel">Easy</b> ▾</button>
+          <button class="btn dd-btn" id="dd1Btn" type="button" aria-haspopup="true" aria-expanded="false"> <b id="levelLabel">Medium</b> ▾</button>
           <div class="dd-panel" id="dd1Panel" hidden>
             <button class="dd-item" data-level="easy" type="button">Easy</button>
             <button class="dd-item" data-level="medium" type="button">Medium</button>
             <button class="dd-item" data-level="hard" type="button">Hard</button>
             <button class="dd-item" data-level="custom" type="button">Custom…</button>
-            <div id="customBox" hidden><div class="custom-grid" id="customFields"></div><button class="btn primary full" id="applyCustom" type="button">Apply &amp; restart</button></div>
+            <div id="customBox" hidden>
+              <div class="custom-grid" id="customFields"></div>
+              <button class="btn primary full" id="applyCustom" type="button">Apply &amp; restart</button>
+            </div>
           </div>
         </div>
+
         <div class="dd" id="dd2">
-          <button class="btn dd-btn" id="dd2Btn" type="button">Settings ▾</button>
+          <button class="btn dd-btn" id="dd2Btn" type="button" aria-haspopup="true" aria-expanded="false">Settings ▾</button>
           <div class="dd-panel wide" id="dd2Panel" hidden>
-            <label>No. of questions<select id="count"><option value="10">10</option><option value="20" selected>20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option></select></label>
-            <label>Overall time<select id="overallTime"><option value="0">No limit</option><option value="60">1 min</option><option value="180">3 min</option><option value="300" selected>5 min</option><option value="600">10 min</option><option value="900">15 min</option></select></label>
-            <label>Per-question time<select id="questionTime"><option value="0">No limit</option><option value="5">5 sec</option><option value="10" selected>10 sec</option><option value="15">15 sec</option><option value="20">20 sec</option><option value="30">30 sec</option><option value="60">60 sec</option></select></label>
+            <label>No. of questions
+              <select id="count"><option value="10">10</option><option value="20" selected>20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option></select>
+            </label>
+            <label>Overall time
+              <select id="overallTime"><option value="0">No limit</option><option value="60">1 min</option><option value="180">3 min</option><option value="300" selected>5 min</option><option value="600">10 min</option><option value="900">15 min</option></select>
+            </label>
+            <label>Per-question time
+              <select id="questionTime"><option value="0">No limit</option><option value="5">5 sec</option><option value="10" selected>10 sec</option><option value="15">15 sec</option><option value="20">20 sec</option><option value="30">30 sec</option><option value="60">60 sec</option></select>
+            </label>
+            <div class="fontrow"><span>Question size</span>
+              <div class="fontctl"><button class="btn" id="qMinus" type="button" aria-label="Smaller question text">A−</button><b id="qScaleVal">100%</b><button class="btn" id="qPlus" type="button" aria-label="Larger question text">A+</button></div>
+            </div>
             <button class="btn primary full" id="applySettings" type="button">Apply &amp; restart</button>
           </div>
         </div>
+
         <button class="btn danger" id="endSession" type="button">End</button>
       </div>
+
       <section class="quiz-card" id="quiz">
         <div class="stats">
           <div><span>QUESTION</span><strong id="questionCount">1/20</strong></div>
@@ -80,31 +128,61 @@
           <div class="good"><span>CORRECT</span><strong id="liveScore">0</strong></div>
         </div>
         <div class="question-area">
-          <span class="question-label" id="prompt">Solve</span><div class="expression" id="expression">24 + 18</div>
-          <input id="answer" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Type answer" autocomplete="off" aria-label="Your answer">
+          <span class="question-label" id="prompt">Solve</span>
+          <div class="expression" id="expression">24 + 18</div>
+          <input id="answer" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="Your answer">
           <p class="feedback" id="feedback" aria-live="polite">Answer submits automatically</p>
+          <div class="keypad" id="keypad" aria-label="Number pad">
+            <button type="button" data-k="1">1</button><button type="button" data-k="2">2</button><button type="button" data-k="3">3</button>
+            <button type="button" data-k="4">4</button><button type="button" data-k="5">5</button><button type="button" data-k="6">6</button>
+            <button type="button" data-k="7">7</button><button type="button" data-k="8">8</button><button type="button" data-k="9">9</button>
+            <button type="button" class="k-fn" data-k="skip" aria-label="Skip question">Skip</button><button type="button" data-k="0">0</button><button type="button" class="k-fn" data-k="back" aria-label="Backspace">⌫</button>
+          </div>
           <button class="btn ghost" id="skip" type="button">Skip →</button>
         </div>
       </section>
+
       <section class="quiz-card result" id="done" hidden>
-        <span class="pill">SESSION SUMMARY</span><h2 id="resultTitle">Practice complete!</h2>
-        <div class="final-score" id="finalScore">0/20</div><p id="finalAccuracy">Accuracy: 0%</p><p class="motivation" id="resultQuote"></p>
+        <span class="pill">SESSION SUMMARY</span>
+        <h2 id="resultTitle">Practice complete!</h2>
+        <div class="final-score" id="finalScore">0/20</div>
+        <p id="finalAccuracy">Accuracy: 0%</p>
+        <p class="motivation" id="resultQuote"></p>
         <div class="result-stats">
-          <div><strong id="resultCorrect">0</strong><span>Correct</span></div><div><strong id="resultWrong">0</strong><span>Incorrect</span></div><div><strong id="resultSkipped">0</strong><span>Skipped</span></div><div><strong id="resultTime">00:00</strong><span>Time</span></div>
+          <div><strong id="resultCorrect">0</strong><span>Correct</span></div>
+          <div><strong id="resultWrong">0</strong><span>Incorrect</span></div>
+          <div><strong id="resultSkipped">0</strong><span>Skipped</span></div>
+          <div><strong id="resultTime">00:00</strong><span>Time</span></div>
         </div>
-        <div class="result-actions"><button class="btn primary" id="again" type="button">Try again</button><button class="btn" id="reviewButton" type="button">Review answers</button><button class="btn ghost" id="homeButton" type="button">Home</button></div>
+        <div class="result-actions">
+          <button class="btn primary" id="again" type="button">Try again</button>
+          <button class="btn" id="reviewButton" type="button">Review answers</button>
+          <button class="btn ghost" id="homeButton" type="button">Home</button>
+        </div>
         <div class="review-list" id="reviewList" hidden></div>
       </section>
     </section>
+
+    <!-- REMEMBER -->
     <section id="remember" hidden>
       <div class="toolbar">
-        <button class="btn ghost" id="rBack" type="button">← Home</button><h1 id="rTitle">Squares</h1>
+        <button class="btn ghost" id="rBack" type="button">← Home</button>
+        <h1 id="rTitle">Squares</h1>
+        <button class="btn fbtn" id="rFontMinus" type="button" aria-label="Smaller text" title="Smaller text">A−</button>
         <button class="btn gear" id="rGear" type="button" aria-label="Settings" title="Settings">⚙</button>
-        <div class="rpanel" id="rPanel"><div class="chips" id="rTabs" hidden></div><div class="rcontrols" id="rControls"></div><button class="btn" id="rHide" type="button">Hide answers</button></div>
+        <button class="btn fbtn" id="rFontPlus" type="button" aria-label="Larger text" title="Larger text">A+</button>
+        <div class="rpanel" id="rPanel">
+          <div class="chips" id="rTabs" hidden></div>
+          <div class="rcontrols" id="rControls"></div>
+          <button class="btn" id="rHide" type="button">Hide answers</button>
+        </div>
       </div>
-      <section class="quiz-card remember-card"><div id="rGrid"></div></section>
+      <section class="quiz-card remember-card">
+        <div id="rGrid"></div>
+      </section>
     </section>
   </main>
+
   <footer><span>MathSprint</span><span>Small steps. Faster calculations.</span></footer>
   <script src="script.js"></script>
 </body>
