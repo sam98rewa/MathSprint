@@ -1,24 +1,296 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
-:root{color-scheme:dark;--bg:#070b18;--glass:rgba(255,255,255,.055);--glass-2:rgba(255,255,255,.09);--line:rgba(255,255,255,.12);--text:#eef2ff;--muted:#93a0c0;--accent:#6d8dff;--accent2:#b06dff;--green:#38e0a0;--red:#ff6b7a;--panel:#12183a;--field:#0c112b;--inset:rgba(0,0,0,.22);--bg-a:#1a1f4d;--bg-b:#2a1050;--orb:.55;--sym:rgba(160,180,255,.12);--shadow:rgba(0,0,0,.5)}
-:root[data-theme="light"]{color-scheme:light;--bg:#f2f5fd;--glass:rgba(255,255,255,.72);--glass-2:#fff;--line:rgba(25,35,80,.13);--text:#141a36;--muted:#5b6788;--accent:#4a6cf0;--accent2:#9a55f0;--green:#12945f;--red:#d43d4d;--panel:#fff;--field:#f1f4ff;--inset:rgba(25,35,80,.045);--bg-a:#d7e0ff;--bg-b:#ecd9ff;--orb:.32;--sym:rgba(70,90,200,.1);--shadow:rgba(30,40,100,.18)}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:Manrope,system-ui,sans-serif;overflow-x:hidden}button,input,select{font:inherit;color:inherit}button{cursor:pointer}[hidden]{display:none!important}
-.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;background:radial-gradient(1200px 700px at 80% -10%,var(--bg-a) 0%,transparent 60%),radial-gradient(900px 600px at -10% 100%,var(--bg-b) 0%,transparent 60%),var(--bg)}.bg:after{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:56px 56px;opacity:.45;mask-image:radial-gradient(ellipse at center,#000 25%,transparent 75%)}.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:var(--orb);animation:drift 18s ease-in-out infinite alternate}.o1{width:420px;height:420px;background:#3b5bff;top:-120px;left:8%}.o2{width:380px;height:380px;background:#a23bff;bottom:-100px;right:6%;animation-delay:-6s}.o3{width:260px;height:260px;background:#00d4aa;top:45%;left:55%;opacity:calc(var(--orb)*.5);animation-delay:-11s}@keyframes drift{to{transform:translate(60px,40px) scale(1.15)}}.sym{position:absolute;font:700 44px "Space Grotesk",sans-serif;color:var(--sym);animation:floaty 14s ease-in-out infinite alternate}.s1{top:14%;left:6%}.s2{top:62%;left:12%;animation-delay:-3s}.s3{top:20%;right:9%;animation-delay:-5s}.s4{top:72%;right:14%;animation-delay:-7s}.s5{top:42%;left:3%;animation-delay:-9s}.s6{top:84%;left:46%;animation-delay:-2s}.s7{top:8%;left:48%;animation-delay:-8s}.s8{top:50%;right:4%;animation-delay:-4s}@keyframes floaty{to{transform:translateY(-28px) rotate(12deg)}}
-.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px max(4%,calc((100% - 1100px)/2))}.brand{display:flex;align-items:center;gap:12px;color:var(--text);text-decoration:none}.brand-mark{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:26px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 0 28px rgba(109,141,255,.5)}.brand strong{display:block;font:700 18px "Space Grotesk",sans-serif;letter-spacing:-.3px}.brand small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.theme-toggle{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--glass);backdrop-filter:blur(10px);font-size:20px;line-height:1;display:grid;place-items:center}.theme-toggle:hover{border-color:var(--accent)}main{width:min(1100px,92%);margin:10px auto 60px}
-.quote{margin:0;padding:64px 12px 44px;text-align:center;font:700 clamp(27px,6vw,55px) "Space Grotesk",sans-serif;letter-spacing:-1.5px;line-height:1.12;position:relative}.quote b{font-weight:700;white-space:nowrap}.quote-mark{display:block;font-size:80px;line-height:.5;height:40px;color:var(--accent);opacity:.7}.grad{background:linear-gradient(90deg,#7da0ff,#c27dff,#ff8fb1);-webkit-background-clip:text;background-clip:text;color:transparent}.pill{display:inline-flex;align-items:center;padding:7px 14px;border:1px solid var(--line);border-radius:99px;background:var(--glass);font-size:10px;font-weight:800;letter-spacing:1.6px;color:var(--accent)}
-.section-heading{display:flex;align-items:baseline;justify-content:space-between;margin:10px 4px 16px}.section-heading h2{margin:0;font:700 24px "Space Grotesk",sans-serif;letter-spacing:-.5px}.section-heading span{font-size:12px;color:var(--muted)}.home-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
-.tile{--c:#6d8dff;position:relative;overflow:hidden;text-align:left;padding:20px;border:1px solid var(--line);border-radius:20px;background:var(--glass);backdrop-filter:blur(14px);display:grid;grid-template-columns:auto 1fr;align-items:center;column-gap:14px;transition:transform .2s,border-color .2s,box-shadow .2s}.tile:before{content:"";position:absolute;width:180px;height:180px;right:-60px;top:-70px;border-radius:50%;background:var(--c);opacity:.2;filter:blur(40px);transition:opacity .2s}.tile:hover,.tile:focus-visible{transform:translateY(-5px);border-color:var(--c);box-shadow:0 18px 44px -14px var(--c);outline:none}.tile:hover:before,.tile:focus-visible:before{opacity:.5}.t-blue{--c:#5b82ff}.t-orange{--c:#ff9a4d}.t-purple{--c:#b06dff}.t-green{--c:#22c98a}.t-pink{--c:#ff6fa5}.t-teal{--c:#1fc4be}.t-gold{--c:#f5b52e}.t-red{--c:#ff5d6c}.tile-icon{position:relative;width:50px;height:50px;border-radius:15px;display:grid;place-items:center;font:700 22px "Space Grotesk",sans-serif;color:#fff;background:linear-gradient(135deg,var(--c),color-mix(in srgb,var(--c) 45%,#000));box-shadow:0 8px 22px -6px var(--c)}.tile h3{position:relative;margin:0;font:700 19px "Space Grotesk",sans-serif}.tile .summary{position:relative;grid-column:1/-1;margin:0;font-size:13px;line-height:1.5;color:var(--muted);max-height:0;opacity:0;overflow:hidden;transition:max-height .25s,opacity .25s,margin .25s}.tile:hover .summary,.tile:focus-visible .summary{max-height:90px;opacity:1;margin-top:14px}@media(hover:none){.tile .summary{max-height:none;opacity:1;margin-top:12px}}
-.btn{border:1px solid var(--line);background:var(--glass-2);border-radius:12px;padding:10px 15px;font-weight:700;font-size:13px}.btn:hover{border-color:var(--accent)}.btn.ghost{background:transparent}.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border:0;color:#fff}.btn.danger{background:rgba(255,107,122,.14);border-color:rgba(255,107,122,.5);color:var(--red)}.btn.danger:hover{background:rgba(255,107,122,.26)}.btn.full{width:100%;margin-top:12px}
-.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0 20px}.toolbar h1{flex:1;min-width:140px;margin:0 6px;font:700 22px "Space Grotesk",sans-serif}.dd{position:relative}.dd-panel{position:absolute;right:0;top:calc(100% + 8px);z-index:20;min-width:210px;padding:10px;border:1px solid var(--line);border-radius:16px;background:var(--panel);box-shadow:0 20px 50px var(--shadow)}.dd-panel.wide{min-width:250px;display:flex;flex-direction:column;gap:12px;padding:16px}.dd-item{display:block;width:100%;text-align:left;padding:10px 12px;border:0;border-radius:9px;background:transparent;font-weight:600;font-size:14px}.dd-item:hover,.dd-item.selected{background:color-mix(in srgb,var(--accent) 18%,transparent)}.dd-item.selected:after{content:" ✓";color:var(--green)}label{display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:700;color:var(--muted)}select,.field input{width:100%;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--field);color:var(--text);padding:0 10px;outline:none}select:focus,.field input:focus{border-color:var(--accent)}#customBox{margin-top:8px;padding-top:10px;border-top:1px solid var(--line);min-width:270px}.custom-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.custom-grid .hint{grid-column:1/-1;font-size:10px;color:var(--muted);margin:0}
-.quiz-card{padding:26px;border:1px solid var(--line);border-radius:24px;background:var(--glass);backdrop-filter:blur(16px)}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stats div{padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--inset);text-align:center}.stats span{display:block;font-size:9px;font-weight:800;letter-spacing:1.2px;color:var(--muted)}.stats strong{display:block;margin-top:6px;font:700 26px "Space Grotesk",sans-serif;font-variant-numeric:tabular-nums}.stats .good strong{color:var(--green)}.stats .warn strong{color:var(--red)}.question-area{text-align:center;padding:36px 0 6px}.question-label{font-size:12px;color:var(--muted)}.expression{margin:14px 0 22px;min-height:76px;font:700 clamp(44px,9vw,84px) "Space Grotesk",sans-serif;letter-spacing:-1px;overflow-wrap:anywhere}.expression.long{font-size:clamp(28px,6vw,54px)}#answer{width:min(320px,86%);height:62px;text-align:center;font:700 30px "Space Grotesk",sans-serif;border:1.5px solid var(--line);border-radius:16px;background:var(--inset);outline:none}#answer:focus{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 22%,transparent)}.feedback{min-height:22px;margin:14px 0 8px;font-size:13px;font-weight:700;color:var(--muted)}.feedback.good{color:var(--green)}.feedback.bad{color:var(--red)}
-.result{text-align:center}.result h2{margin:14px 0 4px;font:700 28px "Space Grotesk",sans-serif}.final-score{font:700 56px "Space Grotesk",sans-serif}.result p{color:var(--muted);margin:2px 0 14px}.result .motivation{max-width:520px;margin:0 auto 24px;font-size:16px;font-style:italic;font-weight:600;color:var(--text);line-height:1.5}.result-stats{display:grid;grid-template-columns:repeat(4,1fr);max-width:620px;margin:0 auto 24px;border:1px solid var(--line);border-radius:16px;overflow:hidden}.result-stats div{padding:16px 8px;border-right:1px solid var(--line)}.result-stats div:last-child{border:0}.result-stats strong{display:block;font:700 22px "Space Grotesk",sans-serif}.result-stats span{font-size:11px;color:var(--muted)}.result-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.review-list{max-width:700px;margin:26px auto 0;text-align:left;border-top:1px solid var(--line);padding-top:16px}.review-item{padding:11px 13px;border:1px solid var(--line);border-radius:11px;margin:8px 0;font-size:13px}.review-item strong{display:block;margin-bottom:4px}.review-answer{color:var(--muted)}.review-item.correct{border-left:3px solid var(--green)}.review-item.wrong,.review-item.skipped,.review-item.timeout{border-left:3px solid var(--red)}
-footer{width:min(1100px,92%);margin:0 auto;padding:18px 0 26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
-@media(max-width:560px){.quote{padding:40px 6px 30px}.home-grid{grid-template-columns:1fr 1fr;gap:10px}.tile{grid-template-columns:1fr;row-gap:10px;padding:16px}.tile-icon{width:42px;height:42px}.tile h3{font-size:16px}.toolbar h1{order:-1;flex-basis:100%;margin:0}.stats{grid-template-columns:1fr 1fr}.stats strong{font-size:22px}.quiz-card{padding:16px}.result-stats{grid-template-columns:1fr 1fr}.result-stats div:nth-child(2){border-right:0}.result-stats div:nth-child(-n+2){border-bottom:1px solid var(--line)}}
-@media(max-width:560px){.home-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.home-grid .tile:last-child:nth-child(odd){grid-column:1/-1}}
-@media(max-width:360px){.tile{padding:14px}.tile h3{font-size:15px}}
-#home .home-grid+.section-heading{margin-top:34px}.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}.chip{min-width:44px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--glass-2);font:700 14px "Space Grotesk",sans-serif;text-align:center}.chip:hover{border-color:var(--accent)}.chip.on{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}.rcell{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--inset);font:700 17px "Space Grotesk",sans-serif;font-variant-numeric:tabular-nums}.rcell .q,.trow .q{color:var(--muted)}.rcell .q{font-size:15px}.rcell .v,.trow .v{color:var(--green);transition:filter .2s}.hide-on .rcell .v,.hide-on .trow .v,.hide-on .chart .v{filter:blur(8px);cursor:pointer;user-select:none}.hide-on .rcell .v.show,.hide-on .trow .v.show,.hide-on .chart .v.show{filter:none}.rcontrols{margin:0 0 14px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}.ctl-note{font-size:11px;color:var(--muted)}.ctl{display:inline-flex;flex-direction:row;align-items:center;gap:10px;font-size:13px}.ctl input{width:90px;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--field);color:var(--text);padding:0 10px;outline:none;text-align:center;font-weight:700}.ctl input:focus{border-color:var(--accent)}.hlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}.tcard{border:1px solid var(--line);border-radius:14px;background:var(--inset);padding:12px 14px}.tcard h4{margin:0 0 8px;font:700 15px "Space Grotesk",sans-serif;color:var(--accent)}.trow{display:flex;justify-content:space-between;gap:8px;padding:4px 0;font:700 15px "Space Grotesk",sans-serif;font-variant-numeric:tabular-nums}.dnav{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px}.dnav select{width:auto;min-width:110px}.carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}.carousel::-webkit-scrollbar{display:none}.slide{flex:0 0 100%;scroll-snap-align:center;display:flex;justify-content:center;padding:2px}.slide .tcard{width:min(380px,100%)}.slide .trow{font-size:20px;padding:6px 0}.swipe-hint{text-align:center;color:var(--muted);font-size:12px;margin:10px 0 0}.chart-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--inset)}.chart{border-collapse:separate;border-spacing:0;width:100%;text-align:center;font:700 14px "Space Grotesk",sans-serif;font-variant-numeric:tabular-nums}.chart th,.chart td{padding:8px 6px;border-bottom:1px solid var(--line);border-right:1px solid var(--line)}.chart thead th{color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2))}.chart tbody th{color:var(--accent);background:var(--panel);position:sticky;left:0;z-index:1}.chart thead th:first-child{position:sticky;left:0;z-index:2}.chart td.v{color:var(--green);transition:filter .2s}.chart tr:last-child th,.chart tr:last-child td{border-bottom:0}.chart th:last-child,.chart td:last-child{border-right:0}
-@media(max-width:560px){.chips{justify-content:center}.rcontrols{text-align:center}.hlist{grid-template-columns:1fr 1fr}.rcontrols{justify-content:center}.chart{font-size:12.5px}.chart th,.chart td{padding:6px 3px}.tgrid{grid-template-columns:1fr 1fr;gap:8px}.tcard{padding:10px}.trow{font-size:13px}.rcell{padding:10px 11px;font-size:15px}.toolbar{justify-content:center}.toolbar h1{text-align:center}.tile{justify-items:center;text-align:center}.tile h3{text-align:center}.tile .summary{text-align:center}}
-body.in-practice .brand>span:last-child{display:none}body.in-practice footer{display:none}body.in-practice main{margin-bottom:16px}body.in-practice .site-header{padding-top:12px;padding-bottom:4px}body.in-practice .toolbar{margin:6px 0 12px}body.in-practice .quiz-card{min-height:calc(100vh - 190px);min-height:calc(100dvh - 190px);display:flex;flex-direction:column;justify-content:center}body.in-practice .question-area{padding:clamp(10px,4vh,36px) 0 6px}body.in-practice .expression{min-height:0;margin:clamp(6px,2vh,14px) 0 clamp(10px,3vh,22px);font-size:clamp(34px,min(9vw,11vh),84px)}body.in-practice .expression.long{font-size:clamp(24px,min(6vw,7.5vh),54px)}
-@media(max-height:640px){body.in-practice .brand small{display:none}body.in-practice .stats div{padding:8px 10px}body.in-practice .stats strong{font-size:20px;margin-top:2px}body.in-practice #answer{height:50px;font-size:26px}body.in-practice .feedback{margin:8px 0 4px}body.in-practice .quiz-card{padding:12px}}
-.brand-mark i{font-style:normal}.ic-home{display:none}.hdr-title{display:none}.gear{display:none;width:44px;height:44px;padding:0;border-radius:50%;font-size:20px;line-height:1}.rpanel{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}.rpanel .chips,.rpanel .rcontrols{margin:0}
-@media(max-width:560px){body.in-practice .site-header{gap:10px}body.in-practice .ic-logo{display:none}body.in-practice .ic-home{display:block}body.in-practice .hdr-title{display:block;flex:1;min-width:0;text-align:center;font:700 16px "Space Grotesk",sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}body.in-practice #back,body.in-practice #modeTitle,body.in-practice #rBack,body.in-practice #rTitle{display:none}body.in-practice .toolbar{position:relative;flex-wrap:nowrap;gap:8px;justify-content:center}body.in-practice .toolbar .dd{position:static;flex:1;min-width:0}body.in-practice .toolbar .dd-btn,body.in-practice #endSession{width:100%;padding:10px 6px;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}body.in-practice #endSession{flex:1;min-width:0}body.in-practice .dd-panel,body.in-practice .dd-panel.wide{left:0;right:0;min-width:0}body.in-practice #customBox{min-width:0}body.in-practice .gear{display:grid;place-items:center}body.in-practice .rpanel{display:none;position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:20;flex-direction:column;align-items:center;gap:12px;padding:14px;border:1px solid var(--line);border-radius:16px;background:var(--panel);box-shadow:0 20px 50px var(--shadow)}body.in-practice .rpanel.open{display:flex}}
-@media(prefers-reduced-motion:reduce){.orb,.sym{animation:none}}
+
+:root{
+  color-scheme:dark;
+  --bg:#070b18; --glass:rgba(255,255,255,.055); --glass-2:rgba(255,255,255,.09);
+  --line:rgba(255,255,255,.12); --text:#eef2ff; --muted:#93a0c0;
+  --accent:#6d8dff; --accent2:#b06dff; --green:#38e0a0; --red:#ff6b7a;
+  --panel:#12183a; --field:#0c112b; --inset:rgba(0,0,0,.22);
+  --bg-a:#1a1f4d; --bg-b:#2a1050; --orb:.55; --sym:rgba(160,180,255,.12); --shadow:rgba(0,0,0,.5);
+}
+:root[data-theme="light"]{
+  color-scheme:light;
+  --bg:#f2f5fd; --glass:rgba(255,255,255,.72); --glass-2:#ffffff;
+  --line:rgba(25,35,80,.13); --text:#141a36; --muted:#5b6788;
+  --accent:#4a6cf0; --accent2:#9a55f0; --green:#12945f; --red:#d43d4d;
+  --panel:#ffffff; --field:#f1f4ff; --inset:rgba(25,35,80,.045);
+  --bg-a:#d7e0ff; --bg-b:#ecd9ff; --orb:.32; --sym:rgba(70,90,200,.1); --shadow:rgba(30,40,100,.18);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html,body{-webkit-user-select:none;user-select:none}
+input{-webkit-user-select:text;user-select:text}
+::selection{background:transparent}
+img,svg{-webkit-user-drag:none;pointer-events:none}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:Manrope,system-ui,sans-serif;overflow-x:hidden}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+[hidden]{display:none!important}
+
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;
+  background:radial-gradient(1200px 700px at 80% -10%,var(--bg-a) 0%,transparent 60%),radial-gradient(900px 600px at -10% 100%,var(--bg-b) 0%,transparent 60%),var(--bg)}
+.bg::after{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:56px 56px;opacity:.45;mask-image:radial-gradient(ellipse at center,#000 25%,transparent 75%)}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:var(--orb);animation:drift 18s ease-in-out infinite alternate}
+.o1{width:420px;height:420px;background:#3b5bff;top:-120px;left:8%}
+.o2{width:380px;height:380px;background:#a23bff;bottom:-100px;right:6%;animation-delay:-6s}
+.o3{width:260px;height:260px;background:#00d4aa;top:45%;left:55%;opacity:calc(var(--orb) * .5);animation-delay:-11s}
+@keyframes drift{to{transform:translate(60px,40px) scale(1.15)}}
+.sym{position:absolute;font:700 44px "Space Grotesk",sans-serif;color:var(--sym);animation:floaty 14s ease-in-out infinite alternate}
+.s1{top:14%;left:6%}.s2{top:62%;left:12%;animation-delay:-3s}.s3{top:20%;right:9%;animation-delay:-5s}.s4{top:72%;right:14%;animation-delay:-7s}
+.s5{top:42%;left:3%;animation-delay:-9s}.s6{top:84%;left:46%;animation-delay:-2s}.s7{top:8%;left:48%;animation-delay:-8s}.s8{top:50%;right:4%;animation-delay:-4s}
+@keyframes floaty{to{transform:translateY(-28px) rotate(12deg)}}
+
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px max(4%,calc((100% - 1100px)/2))}
+.brand{display:flex;align-items:center;gap:12px;color:var(--text);text-decoration:none}
+.brand-mark{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:26px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 0 28px rgba(109,141,255,.5)}
+.brand strong{display:block;font:700 18px "Space Grotesk",sans-serif;letter-spacing:-.3px}
+.brand small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.theme-toggle{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--glass);backdrop-filter:blur(10px);font-size:20px;line-height:1;display:grid;place-items:center}
+.theme-toggle:hover{border-color:var(--accent)}
+main{width:min(1100px,92%);margin:10px auto 60px}
+
+/* one quote */
+.quote{margin:0;padding:64px 12px 44px;text-align:center;font:700 clamp(27px,6vw,55px) "Space Grotesk",sans-serif;letter-spacing:-1.5px;line-height:1.12;position:relative}
+.quote b{font-weight:700;white-space:nowrap}
+.quote-mark{display:block;font-size:80px;line-height:.5;height:40px;color:var(--accent);opacity:.7}
+.grad{background:linear-gradient(90deg,#7da0ff,#c27dff,#ff8fb1);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pill{display:inline-flex;align-items:center;padding:7px 14px;border:1px solid var(--line);border-radius:99px;background:var(--glass);font-size:11px;font-weight:800;letter-spacing:1.6px;color:var(--accent)}
+
+.section-heading{display:flex;align-items:baseline;justify-content:space-between;margin:10px 4px 16px}
+.section-heading h2{margin:0;font:700 24px "Space Grotesk",sans-serif;letter-spacing:-.5px}.section-heading span{font-size:12px;color:var(--muted)}
+
+/* tiles: icon + title */
+.home-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.tile{--c:#6d8dff;position:relative;overflow:hidden;text-align:left;padding:20px;border:1px solid var(--line);border-radius:20px;background:var(--glass);backdrop-filter:blur(14px);display:grid;grid-template-columns:auto 1fr;align-items:center;column-gap:14px;transition:transform .2s,border-color .2s,box-shadow .2s}
+.tile::before{content:"";position:absolute;width:180px;height:180px;right:-60px;top:-70px;border-radius:50%;background:var(--c);opacity:.2;filter:blur(40px);transition:opacity .2s}
+.tile:hover,.tile:focus-visible{transform:translateY(-5px);border-color:var(--c);box-shadow:0 18px 44px -14px var(--c);outline:none}
+.tile:hover::before,.tile:focus-visible::before{opacity:.5}
+.t-blue{--c:#5b82ff}.t-orange{--c:#ff9a4d}.t-purple{--c:#b06dff}.t-green{--c:#22c98a}.t-pink{--c:#ff6fa5}.t-teal{--c:#1fc4be}.t-gold{--c:#f5b52e}.t-red{--c:#ff5d6c}
+.tile-icon{position:relative;width:50px;height:50px;border-radius:15px;display:grid;place-items:center;font:700 22px "Space Grotesk",sans-serif;color:#fff;background:var(--c);box-shadow:0 8px 22px -6px var(--c)}
+@supports (color:color-mix(in srgb,red,blue)){.tile-icon{background:linear-gradient(135deg,var(--c),color-mix(in srgb,var(--c) 45%,#000))}}
+.tile h3{position:relative;margin:0;font:700 19px "Space Grotesk",sans-serif}
+
+/* buttons */
+.btn{border:1px solid var(--line);background:var(--glass-2);border-radius:12px;padding:10px 15px;font-weight:700;font-size:13px}
+.btn:hover{border-color:var(--accent)}
+.btn.ghost{background:transparent}
+.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border:0;color:#fff}
+.btn.danger{background:rgba(255,107,122,.14);border-color:rgba(255,107,122,.5);color:var(--red)}
+.btn.danger:hover{background:rgba(255,107,122,.26)}
+.btn.full{width:100%;margin-top:12px}
+
+/* toolbar + dropdowns */
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0 20px}
+.toolbar h1{flex:1;min-width:140px;margin:0 6px;font:700 22px "Space Grotesk",sans-serif}
+.dd{position:relative}
+.dd-panel{position:absolute;right:0;top:calc(100% + 8px);z-index:20;min-width:210px;padding:10px;border:1px solid var(--line);border-radius:16px;background:var(--panel);box-shadow:0 20px 50px var(--shadow)}
+.dd-panel.wide{min-width:250px;display:flex;flex-direction:column;gap:12px;padding:16px}
+.dd-item{display:block;width:100%;text-align:left;padding:10px 12px;border:0;border-radius:9px;background:transparent;font-weight:600;font-size:14px}
+.dd-item:hover,.dd-item.selected{background:color-mix(in srgb,var(--accent) 18%,transparent)}
+.dd-item.selected::after{content:" ✓";color:var(--green)}
+label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700;color:var(--muted)}
+select,.field input{width:100%;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--field);color:var(--text);padding:0 10px;outline:none}
+select:focus,.field input:focus{border-color:var(--accent)}
+#customBox{margin-top:8px;padding-top:10px;border-top:1px solid var(--line);min-width:270px}
+.custom-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.custom-grid .hint{grid-column:1/-1;font-size:11px;color:var(--muted);margin:0}
+
+/* quiz */
+.quiz-card{padding:26px;border:1px solid var(--line);border-radius:24px;background:var(--glass);backdrop-filter:blur(16px)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stats div{padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--inset);text-align:center}
+.stats span{display:block;font-size:10px;font-weight:800;letter-spacing:1.2px;color:var(--muted)}
+.stats strong{display:block;margin-top:6px;font:700 26px "Space Grotesk",sans-serif;font-variant-numeric:tabular-nums}
+.stats .good strong{color:var(--green)}
+.stats .warn strong{color:var(--red)}
+.question-area{text-align:center;padding:36px 0 6px}
+.question-label{font-size:12px;color:var(--muted)}
+.expression{margin:14px 0 22px;min-height:76px;font:700 clamp(44px,9vw,84px) "Space Grotesk",sans-serif;letter-spacing:-1px;white-space:nowrap}
+#answer{width:min(280px,70%);height:62px;text-align:center;font:700 30px "Space Grotesk",sans-serif;border:0;border-bottom:3px solid var(--muted);border-radius:0;background:transparent;outline:none}
+#answer:focus{border-bottom-color:var(--accent);box-shadow:none}
+.feedback{min-height:22px;margin:14px 0 8px;font-size:13px;font-weight:700;color:var(--muted)}
+.feedback.good{color:var(--green)}.feedback.bad{color:var(--red)}
+
+/* results */
+.result{text-align:center}
+.result h2{margin:14px 0 4px;font:700 28px "Space Grotesk",sans-serif}
+.final-score{font:700 56px "Space Grotesk",sans-serif}
+.result p{color:var(--muted);margin:2px 0 14px}
+.result .motivation{max-width:520px;margin:0 auto 24px;font-size:16px;font-style:italic;font-weight:600;color:var(--accent2);line-height:1.5}
+.result-stats{display:grid;grid-template-columns:repeat(4,1fr);max-width:620px;margin:0 auto 24px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.result-stats div{padding:16px 8px;border-right:1px solid var(--line)}.result-stats div:last-child{border:0}
+.result-stats strong{display:block;font:700 22px "Space Grotesk",sans-serif}.result-stats span{font-size:12px;color:var(--muted)}
+.result-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.review-list{max-width:700px;margin:26px auto 0;text-align:left;border-top:1px solid var(--line);padding-top:16px}
+.review-item{padding:11px 13px;border:1px solid var(--line);border-radius:11px;margin:8px 0;font-size:13px}
+.review-item strong{display:block;margin-bottom:4px}.review-answer{color:var(--muted)}
+.review-item.unreached{border-left:3px solid var(--line)}.review-item.correct{border-left:3px solid var(--green)}.review-item.wrong,.review-item.skipped,.review-item.timeout{border-left:3px solid var(--red)}
+
+footer{width:min(1100px,92%);margin:0 auto;padding:18px 0 26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:var(--muted);font-size:12px}
+
+@media(max-width:560px){
+  .quote{padding:40px 6px 30px}
+  .home-grid{grid-template-columns:1fr 1fr;gap:10px}.tile{grid-template-columns:1fr;row-gap:10px;padding:16px}.tile-icon{width:42px;height:42px}.tile h3{font-size:16px}
+  .toolbar h1{order:-1;flex-basis:100%;margin:0}
+  .stats{grid-template-columns:1fr 1fr}.stats strong{font-size:22px}
+  .quiz-card{padding:16px}.result-stats{grid-template-columns:1fr 1fr}.result-stats div:nth-child(2){border-right:0}.result-stats div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+}
+/* phones: always 2 columns (even narrow Android screens); an odd last tile (Remember row) spans the full width */
+@media(max-width:560px){
+  .home-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .home-grid .tile:last-child:nth-child(odd){grid-column:1/-1}
+}
+@media(max-width:360px){
+  .tile{padding:14px}.tile h3{font-size:15px}
+}
+
+/* remember (study) screens */
+#home .home-grid + .section-heading{margin-top:34px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+.chip{min-width:44px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--glass-2);font:700 14px "Space Grotesk",sans-serif;text-align:center}
+.chip:hover{border-color:var(--accent)}
+.chip.on{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}
+.rcell{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:.7em .85em;min-width:0;white-space:nowrap;border:1px solid var(--line);border-radius:12px;background:var(--inset);font:700 1em "Space Grotesk",sans-serif;font-variant-numeric:tabular-nums}
+.rcell .q,.trow .q{color:var(--muted)}
+.rcell .q{font-size:.88em}
+.rcell .v,.trow .v{color:var(--green);transition:filter .2s}
+.hide-on .rcell .v,.hide-on .trow .v,.hide-on .chart .v{filter:blur(8px);cursor:pointer;user-select:none}
+.hide-on .rcell .v.show,.hide-on .trow .v.show,.hide-on .chart .v.show{filter:none}
+.rcontrols{margin:0 0 14px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.ctl-note{font-size:12px;color:var(--muted)}
+.ctl{display:inline-flex;flex-direction:row;align-items:center;gap:10px;font-size:13px}
+.ctl input{width:90px;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--field);color:var(--text);padding:0 10px;outline:none;text-align:center;font-weight:700}
+.ctl input:focus{border-color:var(--accent)}
+/* squares / cubes: flowing in columns, top to bottom */
+.hlist{font-size:calc(17px * var(--rs,1));column-width:9.5em;column-gap:10px}
+.hlist .rcell{break-inside:avoid;margin-bottom:8px}
+/* tables */
+.tcard{border:1px solid var(--line);border-radius:14px;background:var(--inset);padding:12px 14px}
+.tcard h4{margin:0 0 8px;font:700 15px "Space Grotesk",sans-serif;color:var(--accent)}
+.trow{display:flex;justify-content:space-between;gap:8px;padding:4px 0;font:700 15px "Space Grotesk",sans-serif;font-variant-numeric:tabular-nums}
+.dnav{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px}
+.dnav select{width:auto;min-width:110px}
+.carousel{overscroll-behavior-x:contain;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.carousel::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always;display:flex;justify-content:center;padding:2px}
+.slide .tcard{width:min(380px,100%)}
+.slide .trow{font-size:20px;padding:6px 0}
+.swipe-hint{text-align:center;color:var(--muted);font-size:12px;margin:10px 0 0}
+
+/* quick-revision chart */
+.chart-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--inset)}
+.chart{border-collapse:separate;border-spacing:0;width:100%;text-align:center;font:700 14px "Space Grotesk",sans-serif;font-variant-numeric:tabular-nums}
+.chart th,.chart td{padding:8px 6px;border-bottom:1px solid var(--line);border-right:1px solid var(--line)}
+.chart thead th{color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2))}
+.chart tbody th{color:var(--accent);background:var(--panel);position:sticky;left:0;z-index:1}
+.chart thead th:first-child{position:sticky;left:0;z-index:2}
+.chart td.v{color:var(--green);transition:filter .2s}
+.chart tr:last-child th,.chart tr:last-child td{border-bottom:0}
+.chart tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.chart tbody th,.chart thead th:first-child{box-shadow:3px 0 6px -3px var(--shadow)}
+.chart-hint{display:none;text-align:center;color:var(--muted);font-size:12px;margin:8px 0 0}
+.chart th:last-child,.chart td:last-child{border-right:0}
+
+/* phones: center the practice toolbar and the home tiles */
+@media(max-width:560px){
+  .chips{justify-content:center}
+  .rcontrols{text-align:center}
+  .hlist{font-size:calc(14px * var(--rs,1))}
+  .rcontrols{justify-content:center}
+  .chart{font-size:12.5px}.chart th,.chart td{padding:6px 3px}
+  .tcard{padding:10px}.trow{font-size:13px}
+  .toolbar{justify-content:center}
+  .toolbar h1{text-align:center}
+  .tile{justify-items:center;text-align:center}
+  .tile h3{text-align:center}
+}
+
+/* practice screen: logo only (no name/tagline), no footer, content adapts to the visible screen */
+body.in-practice .brand > span:last-child{display:none}
+body.in-practice footer{display:none}
+body.in-practice main{margin-bottom:16px}
+body.in-practice .site-header{padding-top:12px;padding-bottom:4px}
+body.in-practice .toolbar{margin:6px 0 12px}
+body.in-practice .quiz-card{min-height:calc(100vh - 190px);min-height:calc(100dvh - 190px);display:flex;flex-direction:column;justify-content:center}
+body.in-practice .question-area{padding:clamp(10px,4vh,36px) 0 6px}
+body.in-practice .expression{min-height:0;margin:clamp(6px,2vh,14px) 0 clamp(10px,3vh,22px);font-size:clamp(34px,min(9vw,11vh),84px)}
+@media(max-height:640px){
+  body.in-practice .brand small{display:none}
+  body.in-practice .stats div{padding:8px 10px}
+  body.in-practice .stats strong{font-size:20px;margin-top:2px}
+  body.in-practice #answer{height:50px;font-size:26px}
+  body.in-practice .feedback{margin:8px 0 4px}
+  body.in-practice .quiz-card{padding:12px}
+}
+/* remember panel (desktop: inline row) */
+.brand-mark i{font-style:normal}
+.ic-home{display:none}
+.hdr-title{display:none}
+.gear{display:none;width:44px;height:44px;padding:0;border-radius:50%;font-size:20px;line-height:1}
+.rpanel{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.rpanel .chips,.rpanel .rcontrols{margin:0}
+
+/* phones, inside a section: home icon | title | theme toggle, then compact toolbar */
+@media(max-width:560px){
+  body.in-practice .site-header{gap:10px}
+  body.in-practice .ic-logo{display:none}
+  body.in-practice .ic-home{display:block}
+  body.in-practice .hdr-title{display:block;flex:1;min-width:0;text-align:center;font:700 16px "Space Grotesk",sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  body.in-practice #back,body.in-practice #modeTitle,body.in-practice #rBack,body.in-practice #rTitle{display:none}
+  body.in-practice .toolbar{position:relative;flex-wrap:nowrap;gap:8px;justify-content:center}
+  body.in-practice .toolbar .dd{position:static;flex:1;min-width:0}
+  body.in-practice .toolbar .dd-btn,body.in-practice #endSession{width:100%;padding:10px 6px;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  body.in-practice #endSession{flex:1;min-width:0}
+  body.in-practice .dd-panel,body.in-practice .dd-panel.wide{left:0;right:0;min-width:0}
+  body.in-practice #customBox{min-width:0}
+  body.in-practice .gear{display:grid;place-items:center}
+  body.in-practice .rpanel{display:none;position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:20;flex-direction:column;align-items:center;gap:12px;padding:14px;border:1px solid var(--line);border-radius:16px;background:var(--panel);box-shadow:0 20px 50px var(--shadow)}
+  body.in-practice .rpanel.open{display:flex}
+}
+/* question-size control (practice settings) */
+.fontrow{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;font-weight:700;color:var(--muted)}
+.fontctl{display:flex;align-items:center;gap:8px}
+.fontctl b{min-width:44px;text-align:center;color:var(--text);font-size:13px}
+.fontctl .btn{padding:8px 12px}
+.btn:disabled{opacity:.4;cursor:default}
+/* remember: A- ⚙ A+ buttons */
+.fbtn{width:44px;height:44px;padding:0;border-radius:50%;display:grid;place-items:center;font:700 15px "Space Grotesk",sans-serif}
+/* built-in number pad: phones only */
+.keypad{display:none;grid-template-columns:repeat(3,1fr);gap:8px;width:min(320px,100%);margin:6px auto 8px}
+/* keypad keys follow the site theme: dark = translucent blue-to-violet glass (same two colours as the logo and the glass cards), light = soft indigo tint (overridden below) */
+:root{--key:linear-gradient(135deg,rgba(109,141,255,.24),rgba(176,109,255,.18));--key-press:linear-gradient(135deg,rgba(109,141,255,.48),rgba(176,109,255,.40));--key-text:var(--text);--key-fn:#B4BFE0;--key-line:rgba(160,180,255,.26)}
+.keypad button{height:clamp(42px,7.2vh,58px);border:1px solid var(--key-line);border-radius:14px;background:var(--key);color:var(--key-text);font:700 22px "Space Grotesk",sans-serif;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
+.keypad button:active{background:var(--key-press)}
+.keypad .k-fn{font-size:18px;color:var(--key-fn)}
+@media(max-width:560px){
+  body.in-practice .keypad{display:grid}
+  body.in-practice .question-area{padding-top:2px}
+  body.in-practice #answer{height:52px;font-size:26px}
+  body.in-practice .feedback{margin:8px 0 4px}
+  /* Tables 2–25 chart: fills the card with a small equal gap on every side */
+  body.chart-fit .remember-card{padding:12px}
+  .chart-hint{display:block}
+  /* tables 2–8 fill the card (8 columns incl. the row labels); 9–25 scroll sideways */
+  body.chart-fit .chart-wrap{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+  body.chart-fit .chart{table-layout:fixed;width:312.5%;font-size:14.5px}
+  body.chart-fit .chart th,body.chart-fit .chart td{padding:9px 0;white-space:nowrap}
+  body.in-practice #skip{display:none}
+}
+/* squares / cubes in a single column: centred, proportioned cards */
+.hlist.one{columns:1}
+.hlist.one .rcell{width:min(100%,13em);margin:0 auto .5em;justify-content:center;text-align:center;gap:.7em}
+:root[data-theme="light"]{--pad:var(--text);--key:#E2E8FF;--key-press:#CBD6FF;--key-text:#24338C;--key-fn:#4D5CB8;--key-line:rgba(74,108,240,.28)}   /* light theme: answer line in navy; keys are a soft tint of the app-icon indigo with deep-indigo text */
+:root[data-theme="light"] #answer{color:var(--pad);caret-color:var(--pad);border-bottom-color:var(--pad)}
+:root[data-theme="light"] #answer:focus{border-bottom-color:var(--pad)}
+
+/* scrolling still works everywhere, but the scrollbars are hidden */
+html,body,*{scrollbar-width:none;-ms-overflow-style:none}
+html::-webkit-scrollbar,body::-webkit-scrollbar,*::-webkit-scrollbar{display:none;width:0;height:0}
+/* visually hidden heading for screen readers */
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* easier on low-end phones: still background during practice / study, and for reduced-motion users */
+body.in-practice .orb,body.in-practice .sym{animation:none}
+@media(prefers-reduced-motion:reduce){
+  .orb,.sym{animation:none}
+  .tile,.btn{transition:none}
+}
