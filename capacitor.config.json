@@ -1,0 +1,6 @@
+{
+  "appId": "com.mathsprint.app",
+  "appName": "MathSprint",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}

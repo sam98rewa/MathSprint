@@ -1,0 +1,17 @@
+{
+  "name": "mathsprint-android",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MathSprint Android app built with Capacitor",
+  "scripts": {
+    "build": "echo \"Static web app ready\"",
+    "cap:sync": "cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/core": "^7.4.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.4.3"
+  }
+}
