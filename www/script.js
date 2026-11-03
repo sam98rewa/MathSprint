@@ -228,8 +228,12 @@ function fitExpression(){
   let size=base*qScale;
   el.style.fontSize=size+'px';
   const avail=el.clientWidth;
-  if(avail>0 && el.scrollWidth>avail){
-    size=Math.max(10,Math.floor(size*avail/el.scrollWidth*0.98));
+  /* measure the real text width (scrollWidth under-reports when the text is centred and overflows both sides) */
+  const textW=()=>{ const r=document.createRange(); r.selectNodeContents(el); return r.getBoundingClientRect().width; };
+  for(let i=0;i<4;i++){
+    const w=textW();
+    if(!(avail>0) || w<=avail*0.98) break;
+    size=Math.max(10,Math.floor(size*avail*0.97/w));
     el.style.fontSize=size+'px';
   }
   /* phone: the question zone has a fixed height, so also keep the text inside it vertically */
