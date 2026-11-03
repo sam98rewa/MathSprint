@@ -312,8 +312,33 @@ body.in-practice .orb,body.in-practice .sym{animation:none}
 .daily .pill{padding:12px 26px;font-size:13px;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
 .daily:hover .pill,.daily:focus-visible .pill{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 14px 34px -12px var(--accent2)}
 .daily:focus-visible{outline:none}
+/* ===== PHONE PRACTICE LAYOUT: fixed zones, no vertical scroll =====
+   Screen is split into: header | toolbar | stats | QUESTION ZONE (flexible) | answer | feedback | KEYPAD (fixed).
+   The question text lives only inside its own zone, so changing its size can never move the keypad. */
+@media(max-width:560px){
+  html:has(body.in-quiz){height:100%;overflow:hidden}
+  body.in-quiz{height:100vh;height:100dvh;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+  body.in-quiz .site-header{flex:none}
+  body.in-quiz main{flex:1 1 0;min-height:0;display:flex;flex-direction:column;margin:0 auto 8px}
+  body.in-quiz #practice{flex:1 1 0;min-height:0;display:flex;flex-direction:column}
+  body.in-quiz .toolbar{flex:none}
+  body.in-quiz #quiz{flex:1 1 0;min-height:0;display:flex;flex-direction:column;justify-content:flex-start;gap:6px;padding:10px}
+  body.in-quiz #quiz .stats{flex:none}
+  body.in-quiz #quiz .question-area{flex:1 1 0;min-height:0;display:flex;flex-direction:column;padding:0}
+  body.in-quiz #prompt{flex:none}
+  /* question zone: takes all leftover height; text is centred inside and clipped to it */
+  body.in-quiz #expression{flex:1 1 0;min-height:0;margin:0;display:flex;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap;line-height:1.1}
+  body.in-quiz #answer{flex:none;align-self:center;height:48px;font-size:26px}
+  body.in-quiz .feedback{flex:none;height:22px;min-height:0;margin:4px 0;line-height:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* keypad zone: fixed size, pinned to the bottom, independent of the question */
+  body.in-quiz .keypad{flex:none;margin:0 auto}
+  body.in-quiz .keypad button{height:calc(clamp(40px,6.6dvh,56px) * var(--ks,1));font-size:calc(22px * var(--ks,1))}
+  body.in-quiz .keypad .k-fn{font-size:calc(18px * var(--ks,1))}
+  body.in-quiz .keypad{width:min(calc(320px * var(--ks,1)),100%);gap:calc(8px * var(--ks,1))}
+  /* result screen scrolls inside its own box if taller than the screen */
+  body.in-quiz #done{flex:1 1 0;min-height:0;overflow-y:auto}
+}
 
-/* fixed zones in practice: the question has its own fixed-height box, so the answer line and number pad never move when the question text grows or shrinks */
-body.in-practice .expression{--qh:clamp(64px,15vh,120px);height:var(--qh);min-height:var(--qh);max-height:var(--qh);line-height:var(--qh);overflow:hidden;white-space:nowrap}
-body.in-practice .feedback{height:22px;min-height:22px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-body.in-practice .question-label{display:block;height:0;overflow:hidden}
+/* keypad-size control only makes sense where the built-in keypad exists (phones) */
+#keyRow{display:none}
+@media(max-width:560px){#keyRow{display:flex}}
