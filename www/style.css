@@ -312,3 +312,8 @@ body.in-practice .orb,body.in-practice .sym{animation:none}
 .daily .pill{padding:12px 26px;font-size:13px;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
 .daily:hover .pill,.daily:focus-visible .pill{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 14px 34px -12px var(--accent2)}
 .daily:focus-visible{outline:none}
+
+/* fixed zones in practice: the question has its own fixed-height box, so the answer line and number pad never move when the question text grows or shrinks */
+body.in-practice .expression{--qh:clamp(64px,15vh,120px);height:var(--qh);min-height:var(--qh);max-height:var(--qh);line-height:var(--qh);overflow:hidden;white-space:nowrap}
+body.in-practice .feedback{height:22px;min-height:22px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+body.in-practice .question-label{display:block;height:0;overflow:hidden}
