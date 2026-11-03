@@ -329,7 +329,7 @@ body.in-practice .orb,body.in-practice .sym{animation:none}
   /* question zone: takes all leftover height; text is centred inside and clipped to it */
   body.in-quiz #expression{flex:1 1 0;min-height:0;margin:0;display:flex;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap;line-height:1.1}
   body.in-quiz #answer{flex:none;align-self:center;height:48px;font-size:26px}
-  body.in-quiz .feedback{flex:none;height:22px;min-height:0;margin:4px 0;line-height:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  body.in-quiz .feedback{flex:none;height:22px;min-height:0;margin:6px 0 14px;line-height:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   /* keypad zone: fixed size, pinned to the bottom, independent of the question */
   body.in-quiz .keypad{flex:none;margin:0 auto}
   body.in-quiz .keypad button{height:calc(clamp(40px,6.6dvh,56px) * var(--ks,1));font-size:calc(22px * var(--ks,1))}
