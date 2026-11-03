@@ -226,14 +226,16 @@ function fitExpression(){
   el.style.fontSize='';
   const base=parseFloat(getComputedStyle(el).fontSize)||40;
   let size=base*qScale;
-  /* the question lives in a fixed-height box: never let the text grow taller than it */
-  const availH=el.clientHeight;
-  if(availH>0) size=Math.min(size,Math.floor(availH*0.8));
   el.style.fontSize=size+'px';
   const avail=el.clientWidth;
   if(avail>0 && el.scrollWidth>avail){
     size=Math.max(10,Math.floor(size*avail/el.scrollWidth*0.98));
     el.style.fontSize=size+'px';
+  }
+  /* phone: the question zone has a fixed height, so also keep the text inside it vertically */
+  if(document.body.classList.contains('in-quiz') && window.matchMedia('(max-width:560px)').matches){
+    const availH=el.clientHeight;
+    if(availH>0){ const capH=Math.max(10,Math.floor(availH/1.15)); if(parseFloat(el.style.fontSize)>capH) el.style.fontSize=capH+'px'; }
   }
 }
 function updateQUI(){
@@ -243,6 +245,19 @@ function updateQUI(){
 }
 $('qMinus').addEventListener('click',()=>{ qScale=stepScale(qScale,-0.1,Q_MIN,Q_MAX); saveScale(QS_KEY,qScale); updateQUI(); fitExpression(); });
 $('qPlus').addEventListener('click',()=>{ qScale=stepScale(qScale,0.1,Q_MIN,Q_MAX); saveScale(QS_KEY,qScale); updateQUI(); fitExpression(); });
+/* keypad size (phones): scales key height + digits; the question zone takes whatever space is left */
+const KS_KEY='mathsprint-kscale', K_MIN=0.7, K_MAX=1.3;
+let kScale=loadScale(KS_KEY,K_MIN,K_MAX);
+function updateKUI(){
+  document.documentElement.style.setProperty('--ks',kScale);
+  $('kScaleVal').textContent=Math.round(kScale*100)+'%';
+  $('kMinus').disabled=kScale<=K_MIN+1e-6;
+  $('kPlus').disabled=kScale>=K_MAX-1e-6;
+}
+function bumpK(d){ kScale=stepScale(kScale,d,K_MIN,K_MAX); saveScale(KS_KEY,kScale); updateKUI(); fitExpression(); }
+$('kMinus').addEventListener('click',()=>bumpK(-0.1));
+$('kPlus').addEventListener('click',()=>bumpK(0.1));
+updateKUI();
 updateQUI();
 window.addEventListener('resize',fitExpression);
 window.addEventListener('orientationchange',()=>setTimeout(fitExpression,150));
@@ -697,6 +712,7 @@ function openRemember(m,swap){
   $('rGrid').classList.remove('hide-on'); $('rHide').textContent='Hide answers'; $('rPanel').classList.remove('open');
   home.hidden=true; practice.hidden=true; remember.hidden=false;
   document.body.classList.add('in-practice');
+  document.body.classList.remove('in-quiz');
   if(swap) replaceScreen('remember'); else pushScreen('remember');
   renderRemember(); markTitles(); window.scrollTo(0,0);
 }
@@ -743,7 +759,7 @@ document.addEventListener('click',e=>{
 function showHome(){
   sessionId++; stopTimer(); finished=true; closeDropdowns(); $('rPanel').classList.remove('open');
   practice.hidden=true; remember.hidden=true; home.hidden=false;
-  document.body.classList.remove('in-practice','chart-fit');
+  document.body.classList.remove('in-practice','chart-fit','in-quiz');
   $('hdrTitle').textContent='';
   window.scrollTo(0,0);
 }
@@ -789,7 +805,7 @@ function openPractice(m,swap,forceLevel){
   $('rPanel').classList.remove('open');
   home.hidden=true; remember.hidden=true; practice.hidden=false;
   document.body.classList.remove('chart-fit');
-  document.body.classList.add('in-practice');
+  document.body.classList.add('in-practice','in-quiz');
   window.scrollTo(0,0);
   if(swap) replaceScreen('practice'); else pushScreen('practice');
   markTitles();
