@@ -226,6 +226,9 @@ function fitExpression(){
   el.style.fontSize='';
   const base=parseFloat(getComputedStyle(el).fontSize)||40;
   let size=base*qScale;
+  /* the question lives in a fixed-height box: never let the text grow taller than it */
+  const availH=el.clientHeight;
+  if(availH>0) size=Math.min(size,Math.floor(availH*0.8));
   el.style.fontSize=size+'px';
   const avail=el.clientWidth;
   if(avail>0 && el.scrollWidth>avail){
