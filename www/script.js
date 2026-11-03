@@ -606,7 +606,7 @@ try{
 }catch(e){}
 const T_MIN=2, T_MAX=25, T_LIM=10;   /* tables: 2–25, multiplied up to 10 only */
 const rNames={square:'Squares', cube:'Cubes', table:'Tables'};
-const rTabList=[['a','2–25'],['d','Detail 2–25']];
+const rTabList=[['a','Tables'],['d','In Detail']];
 const range=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
 /* empty or invalid input keeps the previous value instead of jumping to the minimum */
 const clampN=(v,lo,hi,fb)=>{
@@ -654,7 +654,7 @@ function renderRemember(){
     tabs.innerHTML=rTabList.map(([k,l])=>`<button type="button" class="chip${k===rTab?' on':''}" data-tab="${k}">${l}</button>`).join('');
     ctl.innerHTML='';
     if(rTab==='a') html=tableChart(T_MIN,T_MAX,lim);
-    else html=`<div class="dnav"><button class="btn" type="button" data-dir="-1">‹ Prev</button><select id="rJump" aria-label="Jump to table">${range(T_MIN,T_MAX).map(n=>`<option value="${n}"${n===rDetail?' selected':''}>Table ${n}</option>`).join('')}</select><button class="btn" type="button" data-dir="1">Next ›</button></div><div class="carousel" id="rCar">${range(T_MIN,T_MAX).map(n=>`<div class="slide">${tableCard(n,lim)}</div>`).join('')}</div><p class="swipe-hint">Swipe left / right for the next table</p>`;
+    else html=`<div class="dnav"><button class="btn" type="button" data-dir="-1">‹ Prev</button><select id="rJump" aria-label="Jump to table">${range(T_MIN,T_MAX).map(n=>`<option value="${n}"${n===rDetail?' selected':''}>Table ${n}</option>`).join('')}</select><button class="btn" type="button" data-dir="1">Next ›</button></div><div class="carousel" id="rCar">${range(T_MIN,T_MAX).map(n=>`<div class="slide">${tableCard(n,lim)}</div>`).join('')}</div>`;
   } else {
     const {from,to}=rState[rMode], p=rMode==='square'?2:3;
     tabs.hidden=true; tabs.innerHTML='';
@@ -664,7 +664,7 @@ function renderRemember(){
   }
   grid.innerHTML=html;
   fitList(); requestAnimationFrame(fitList);
-  $('hdrTitle').textContent = rMode==='table' ? `Tables · ${rTab==='a'?'2–25':'Detail'}` : $('rTitle').textContent;
+  $('hdrTitle').textContent = rMode==='table' ? ` ${rTab==='a'?'Tables':'In Detail'}` : $('rTitle').textContent;
   const car=$('rCar');
   if(car){
     requestAnimationFrame(()=>{ car.scrollLeft=(rDetail-T_MIN)*car.clientWidth; });
