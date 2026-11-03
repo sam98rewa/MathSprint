@@ -307,3 +307,8 @@ body.in-practice .orb,body.in-practice .sym{animation:none}
 /* tappable titles (practice / remember): tap to switch view */
 .toggable{cursor:pointer}
 .toggable::after{content:" \21C4";opacity:.55;font-size:.8em}
+/* daily practice: just the "DAILY PRACTICE" pill, tappable */
+.daily{display:block;margin:0 auto 34px;padding:0;border:0;background:none;text-align:center}
+.daily .pill{padding:12px 26px;font-size:13px;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
+.daily:hover .pill,.daily:focus-visible .pill{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 14px 34px -12px var(--accent2)}
+.daily:focus-visible{outline:none}
