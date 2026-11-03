@@ -5,7 +5,7 @@ const titles = {
   addition:'Addition', subtraction:'Subtraction', multiplication:'Multiplication',
   square:'Squares – Mixed', cube:'Cubes – Mixed',
   table:'Tables – Mixed', table_s:'Tables – In Sequence', bodmas:'BODMAS', mix:'Add & Subtract Mix',
-  addition_s:'Successive Addition',
+  addition_s:'Successive Addition', daily:'Daily Practice',
   square_s:'Squares – In Sequence', cube_s:'Cubes – In Sequence'
 };
 /* tapping the title cycles through these views ('@remember' = the Remember screen for that topic) */
@@ -179,6 +179,7 @@ const quotes = [
   "Your next personal best starts with your next question."
 ];
 
+const DAILY_POOL=['addition','subtraction','multiplication','square','cube','table','bodmas'];
 let mode='addition', level='medium', settings={}, customSettings=null;
 let total=20, overallLimit=300, questionLimit=10;
 let index=0, correct=0, wrong=0, skipped=0, current=null, answers=[];
@@ -412,6 +413,16 @@ function mixQuestion(s){
 
 /* ---------- questions ---------- */
 function makeQuestion(){
+  if(mode==='daily'){
+    /* Daily Practice: every question comes from a randomly chosen drill, at the chosen level */
+    const sub=DAILY_POOL[rand(0,DAILY_POOL.length-1)];
+    const lv=presets[level]?level:'easy';
+    const saveMode=mode, saveSettings=settings;
+    mode=sub; settings={...presets[lv][sub]};
+    const q=makeQuestion();
+    mode=saveMode; settings=saveSettings;
+    return q;
+  }
   const s=settings; const t=Math.min(4,Math.max(2,s.terms||2));
   let x,y,answer,expression,prompt='';
   /* "successive" / "in sequence": the number steps through min…max in order (then repeats) */
@@ -555,7 +566,7 @@ function startSession(){
   total=num($('count').value,20,1);
   overallLimit=num($('overallTime').value,0,0);
   questionLimit=num($('questionTime').value,0,0);
-  settings = level==='custom' ? {...(customSettings||presets.medium[mode])} : {...presets[level][mode]};
+  settings = mode==='daily' ? {} : level==='custom' ? {...(customSettings||presets.medium[mode])} : {...presets[level][mode]};
   savePS();
   stopTimer(); sessionId++; endedAt=0;
   index=0; correct=0; wrong=0; skipped=0; answers=[]; current=null;
@@ -753,7 +764,7 @@ if(window.visualViewport){
 }
 
 /* start instantly with basic settings (Easy · 20 Qs · 5 min · 10 s) */
-function openPractice(m,swap){
+function openPractice(m,swap,forceLevel){
   mode=m; level='easy'; customSettings=null;
   $('count').value='20'; $('overallTime').value='300'; $('questionTime').value='10';
   /* the screen always starts on the tapped drill, but its difficulty and settings are restored from last time */
@@ -764,10 +775,11 @@ function openPractice(m,swap){
     if(level==='custom' && !customSettings) level='easy';
     setSel('count',sv.count); setSel('overallTime',sv.overall); setSel('questionTime',sv.qtime);
   }
+  if(mode==='daily'){ level = forceLevel || (presets[level]?level:'easy'); }
   $('modeTitle').textContent=titles[mode]; $('hdrTitle').textContent=titles[mode];
   $('customBox').hidden=true; $('customFields').innerHTML='';
   const seq=isSeq(mode);
-  document.querySelectorAll('.dd-item').forEach(b=>b.hidden=seq);
+  document.querySelectorAll('.dd-item').forEach(b=>b.hidden=seq||(mode==='daily'&&b.dataset.level==='custom'));
   $('customBox').style.cssText = seq ? 'margin-top:0;padding-top:0;border-top:0' : '';
   if(seq){ renderCustomFields(); $('customBox').hidden=false; }
   markLevel(); closeDropdowns();
@@ -780,6 +792,7 @@ function openPractice(m,swap){
   markTitles();
   startSession();
 }
+$('dailyStart').addEventListener('click',()=>openPractice('daily',false));
 document.querySelectorAll('.tile[data-mode]').forEach(t=>t.addEventListener('click',()=>openPractice(t.dataset.mode,false)));
 
 /* tap the title to cycle: Addition ⇄ Successive · Squares: Mixed → In Sequence → Remember → Mixed · Tables: Practice ⇄ Remember */
