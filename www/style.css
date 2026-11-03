@@ -194,7 +194,6 @@ footer{width:min(1100px,92%);margin:0 auto;padding:18px 0 26px;border-top:1px so
 @media(max-width:560px){
   .chips{justify-content:center}
   .rcontrols{text-align:center}
-  .hlist{font-size:calc(14px * var(--rs,1))}
   .rcontrols{justify-content:center}
   .chart{font-size:12.5px}.chart th,.chart td{padding:6px 3px}
   .tcard{padding:10px}.trow{font-size:13px}
@@ -271,9 +270,20 @@ body.in-practice .expression{min-height:0;margin:clamp(6px,2vh,14px) 0 clamp(10p
   .chart-hint{display:block}
   /* tables 2–8 fill the card (8 columns incl. the row labels); 9–25 scroll sideways */
   body.chart-fit .chart-wrap{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
-  body.chart-fit .chart{table-layout:fixed;width:312.5%;font-size:14.5px}
-  body.chart-fit .chart th,body.chart-fit .chart td{padding:9px 0;white-space:nowrap}
+  /* zoom (A− / A+) scales the font AND the table width together, so cells never overflow; extra width scrolls sideways */
+  body.chart-fit .chart{table-layout:fixed;width:calc(312.5% * var(--rs,1));font-size:calc(14.5px * var(--rs,1))}
+  body.chart-fit .chart th,body.chart-fit .chart td{padding:calc(9px * var(--rs,1)) 0;white-space:nowrap}
   body.in-practice #skip{display:none}
+  /* Remember screens on phones: no "Hide answers" button */
+  body.in-practice #rHide{display:none}
+  /* Tables: the 2–25 / Detail tabs are not shown in the settings panel; the gear icon toggles them */
+  body.in-practice #rTabs{display:none}
+  /* Tables, detail view: card text follows the zoom */
+  .slide .trow{font-size:calc(20px * var(--rs,1))}
+  .slide .tcard h4{font-size:calc(15px * var(--rs,1))}
+  /* Squares / cubes: always one centred column, text follows the zoom */
+  .hlist{font-size:calc(20px * var(--rs,1));column-width:auto;columns:1}
+  .hlist .rcell{width:min(100%,13em);margin:0 auto .5em;justify-content:center;gap:.7em}
 }
 /* squares / cubes in a single column: centred, proportioned cards */
 .hlist.one{columns:1}
@@ -294,3 +304,6 @@ body.in-practice .orb,body.in-practice .sym{animation:none}
   .orb,.sym{animation:none}
   .tile,.btn{transition:none}
 }
+/* tappable titles (practice / remember): tap to switch view */
+.toggable{cursor:pointer}
+.toggable::after{content:" \21C4";opacity:.55;font-size:.8em}
