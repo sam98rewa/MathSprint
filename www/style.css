@@ -340,5 +340,103 @@ body.in-practice .orb,body.in-practice .sym{animation:none}
 }
 
 /* keypad-size control only makes sense where the built-in keypad exists (phones) */
-#keyRow{display:none}
-@media(max-width:560px){#keyRow{display:flex}}
+#keyRow,#keyWRow{display:none}
+@media(max-width:560px){#keyRow,#keyWRow{display:flex}}
+/* settings panel: two columns on phones (left: counts & timers, right: sizes); stacked elsewhere */
+.set-cols{display:flex;flex-direction:column;gap:12px}
+.set-col{display:flex;flex-direction:column;gap:12px}
+@media(max-width:560px){
+  .set-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+  .set-col{min-width:0}
+  .set-col .fontrow{flex-direction:column;align-items:stretch;gap:6px}
+  .set-col .fontctl{justify-content:space-between;gap:4px}
+  .set-col .fontctl .btn{padding:8px 0;flex:1;min-width:0}
+  .set-col .fontctl b{min-width:0;flex:1.3;font-size:12.5px}
+  body.in-practice .dd-panel.wide{padding:12px}
+}
+
+/* ===== settings panel: clean, consistent look ===== */
+#dd2Panel.wide{padding:16px;gap:14px;border-radius:18px}
+.set-cols{gap:0}
+.set-col{gap:14px}
+.set-h{margin:0 0 -2px;padding-bottom:8px;border-bottom:1px solid var(--line);font:800 10.5px Manrope,sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:var(--accent)}
+.set-col label,.set-col .fontrow>span{display:block;font-size:11.5px;font-weight:700;letter-spacing:.2px;color:var(--muted)}
+.set-col label{display:flex;flex-direction:column;gap:6px}
+.set-col .fontrow{display:flex;flex-direction:column;align-items:stretch;gap:6px}
+.set-col select{height:40px;border-radius:10px;font-size:13.5px;font-weight:700;padding:0 30px 0 12px;appearance:none;-webkit-appearance:none;
+  background:var(--field) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%238a96c0' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 11px center}
+/* −  value  +  as one segmented control */
+.set-col .fontctl{display:flex;align-items:stretch;gap:0;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--field);overflow:hidden}
+.set-col .fontctl .btn{flex:1;min-width:0;height:100%;padding:0;border:0;border-radius:0;background:transparent;color:var(--accent);font:700 14px "Space Grotesk",sans-serif}
+.set-col .fontctl .btn:active:not(:disabled){background:color-mix(in srgb,var(--accent) 18%,transparent)}
+.set-col .fontctl .btn:disabled{opacity:.3}
+.set-col .fontctl b{flex:1.5;min-width:0;display:grid;place-items:center;border-left:1px solid var(--line);border-right:1px solid var(--line);font:700 13px "Space Grotesk",sans-serif;color:var(--text);font-variant-numeric:tabular-nums}
+#applySettings{height:44px;margin-top:16px;border-radius:12px;font-size:14px;letter-spacing:.2px}
+@media(max-width:560px){
+  .set-cols{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:start}
+  .set-col:first-child{padding-right:12px;border-right:1px solid var(--line)}
+  .set-col:last-child{padding-left:12px}
+  .set-col:first-child .set-h,.set-col:last-child .set-h{margin-bottom:-2px}
+  body.in-practice .dd-panel.wide{padding:14px}
+}
+
+/* ===== settings panel v2: one list; "Display settings" opens the size controls ===== */
+#dd2Panel.wide{gap:0;padding:8px 14px 14px;min-width:260px}
+.set-row{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13.5px;font-weight:700;color:var(--text)}
+.set-row select{width:130px;flex:none;height:38px;border-radius:10px;font-size:13px;font-weight:700;padding:0 28px 0 10px;appearance:none;-webkit-appearance:none;
+  background:var(--field) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%238a96c0' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center}
+.disp-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;padding:12px 0;border:0;border-bottom:1px solid var(--line);background:transparent;font:700 13.5px Manrope,sans-serif;color:var(--accent);text-align:left}
+.disp-toggle i{font-style:normal;transition:transform .2s}
+.disp-toggle.open i{transform:rotate(180deg)}
+.disp-body{padding:4px 0 2px;border-bottom:1px solid var(--line)}
+.disp-body .fontrow{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:12px;padding:8px 0}
+.disp-body .fontrow>span{font-size:13px;font-weight:700;color:var(--text)}
+.disp-body .fontctl{display:flex;align-items:stretch;gap:0;width:150px;flex:none;height:38px;border:1px solid var(--line);border-radius:10px;background:var(--field);overflow:hidden}
+.disp-body .fontctl .btn{flex:1;min-width:0;height:100%;padding:0;border:0;border-radius:0;background:transparent;color:var(--accent);font:700 14px "Space Grotesk",sans-serif}
+.disp-body .fontctl .btn:active:not(:disabled){background:color-mix(in srgb,var(--accent) 18%,transparent)}
+.disp-body .fontctl .btn:disabled{opacity:.3}
+.disp-body .fontctl b{flex:1.6;min-width:0;display:grid;place-items:center;border-left:1px solid var(--line);border-right:1px solid var(--line);font:700 13px "Space Grotesk",sans-serif;color:var(--text);font-variant-numeric:tabular-nums}
+#applySettings{margin-top:14px}
+
+/* ===== ANDROID / PHONE: compact Mode + Settings panels (options side by side, not a tall list) ===== */
+@media(max-width:560px){
+  /* Mode: Easy | Medium | Hard | Custom in one row */
+  #dd1Panel{display:flex;flex-wrap:wrap;gap:6px;padding:8px}
+  #dd1Panel .dd-item{flex:1 1 0;min-width:0;width:auto;padding:9px 2px;text-align:center;font-size:12.5px;border:1px solid var(--line);border-radius:10px}
+  #dd1Panel .dd-item.selected{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 20%,transparent)}
+  #dd1Panel .dd-item.selected::after{content:none}
+  #dd1Panel #customBox{flex:1 1 100%;margin-top:2px}
+
+  /* Settings: the three drop-downs side by side */
+  #dd2Panel.wide{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:10px;min-width:0}
+  #dd2Panel .set-row{flex-direction:column;align-items:stretch;justify-content:flex-start;gap:5px;padding:0;border:0;font-size:11px;font-weight:700;color:var(--muted)}
+  #dd2Panel .set-row select{width:100%;height:36px;padding:0 20px 0 8px;font-size:12.5px;background-position:right 6px center}
+  #dd2Panel .disp-toggle,#dd2Panel .disp-body,#dd2Panel #applySettings{grid-column:1/-1}
+  #dd2Panel .disp-toggle{padding:8px 2px 4px;border-bottom:0;border-top:1px solid var(--line);font-size:12.5px}
+
+  /* Display settings: Que size | Keypad height | Keypad width in one row */
+  #dd2Panel .disp-body{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:2px 0 0;border-bottom:0}
+  #dd2Panel .disp-body .fontrow{flex-direction:column;align-items:stretch;justify-content:flex-start;gap:5px;padding:0}
+  #dd2Panel .disp-body .fontrow>span{font-size:11px;color:var(--muted);white-space:nowrap}
+  #dd2Panel .disp-body .fontctl{width:100%;height:36px}
+  #dd2Panel .disp-body .fontctl b{font-size:11.5px;flex:1.7}
+  #dd2Panel #applySettings{height:38px;margin-top:4px;font-size:13px}
+}
+
+/* Display settings: dark text, and it replaces the three session drop-downs while open */
+#dd2Panel .disp-toggle{color:var(--text)}
+#dd2Panel.disp-open .set-row{display:none}
+#dd2Panel.disp-open .disp-toggle{border-top:0}
+
+/* Display settings button: centred, soft indigo pill; fills with the app gradient while open */
+.disp-toggle,#dd2Panel .disp-toggle,#dd2Panel.disp-open .disp-toggle{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:8px 0 4px;padding:10px 14px;border:1px solid color-mix(in srgb,var(--accent) 38%,transparent);border-radius:12px;background:color-mix(in srgb,var(--accent) 13%,transparent);color:#cfd8ff;font:700 13px Manrope,sans-serif;letter-spacing:.3px;text-align:center;transition:background .2s,border-color .2s,color .2s}
+:root[data-theme="light"] .disp-toggle,:root[data-theme="light"] #dd2Panel .disp-toggle,:root[data-theme="light"] #dd2Panel.disp-open .disp-toggle{color:#2c3da0}
+.disp-toggle:active{background:color-mix(in srgb,var(--accent) 24%,transparent)}
+.disp-toggle i{font-size:12px;opacity:.85}
+#dd2Panel .disp-toggle.open,.disp-toggle.open{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}
+
+/* Display settings: small grey ghost link-button (not like Apply / Start); disappears once opened */
+#dd2Panel .disp-toggle,:root[data-theme="light"] #dd2Panel .disp-toggle{width:auto;align-self:center;justify-self:center;margin:6px 0 2px;padding:5px 12px;border:1px dashed var(--line);border-radius:99px;background:transparent;color:var(--muted);font:600 11.5px Manrope,sans-serif;letter-spacing:.2px;gap:6px}
+#dd2Panel .disp-toggle:active{background:var(--inset)}
+#dd2Panel .disp-toggle i{font-size:10px;opacity:.8}
+#dd2Panel.disp-open .disp-toggle,:root[data-theme="light"] #dd2Panel.disp-open .disp-toggle{display:none}
