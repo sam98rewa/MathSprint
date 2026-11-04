@@ -254,13 +254,15 @@ const KS_KEY='mathsprint-kscale', K_MIN=0.7, K_MAX=1.3;
 let kScale=loadScale(KS_KEY,K_MIN,K_MAX);
 function updateKUI(){
   document.documentElement.style.setProperty('--ks',kScale);
+  /* width + gaps never shrink below 100%: smaller sizes squash the keys from the top (height only) */
+  document.documentElement.style.setProperty('--kw',Math.max(kScale,1));
   $('kScaleVal').textContent=Math.round(kScale*100)+'%';
   $('kMinus').disabled=kScale<=K_MIN+1e-6;
   $('kPlus').disabled=kScale>=K_MAX-1e-6;
 }
-function bumpK(d){ kScale=stepScale(kScale,d,K_MIN,K_MAX); saveScale(KS_KEY,kScale); updateKUI(); fitExpression(); }
-$('kMinus').addEventListener('click',()=>bumpK(-0.1));
-$('kPlus').addEventListener('click',()=>bumpK(0.1));
+function bumpK(d){ kScale=Math.min(K_MAX,Math.max(K_MIN,Math.round((kScale+d)*100)/100)); saveScale(KS_KEY,kScale); updateKUI(); fitExpression(); }
+$('kMinus').addEventListener('click',()=>bumpK(-0.01));
+$('kPlus').addEventListener('click',()=>bumpK(0.01));
 updateKUI();
 updateQUI();
 window.addEventListener('resize',fitExpression);
