@@ -195,8 +195,74 @@ const num = (v,fb,min=0) => {
   return Number.isFinite(n)?Math.max(min,Math.floor(n)):fb;
 };
 const fmt = s => { s=Math.max(0,Math.ceil(s)); return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`; };
+/* picks the number of digits first, so 3-digit and 4-digit numbers are equally likely
+   (plain rand(100,9999) gives ~90% four-digit numbers) */
+function randDigits(a,b){
+  if(b<=a) return a;
+  const da=String(a).length, db=String(b).length;
+  const d=rand(da,db);
+  const lo=Math.max(a, d===1?0:10**(d-1)), hi=Math.min(b,10**d-1);
+  return rand(lo,hi);
+}
 const sum = arr => arr.reduce((a,b)=>a+b,0);
 function stopTimer(){ if(timerId) clearInterval(timerId); timerId=null; }
+
+/* ---------- keypad colours (background + text): colour picker + hex, saved, empty = follow the theme ---------- */
+const KB_KEY='mathsprint-keybg', KF_KEY='mathsprint-keyfg';
+const HEX6=/^#[0-9a-f]{6}$/i;
+const KEY_DEFAULTS={dark:{bg:'#34406f',fg:'#eef2ff'}, light:{bg:'#e2e8ff',fg:'#24338c'}};
+function loadHex(k){ try{ const v=localStorage.getItem(k); if(v&&HEX6.test(v)) return v.toLowerCase(); }catch(e){} return null; }
+let keyBg=loadHex(KB_KEY), keyFg=loadHex(KF_KEY);
+function normHex(v){
+  v=String(v).trim().replace(/^#/,'');
+  if(/^[0-9a-f]{3}$/i.test(v)) v=v.split('').map(c=>c+c).join('');
+  return /^[0-9a-f]{6}$/i.test(v) ? '#'+v.toLowerCase() : null;
+}
+function mixHex(h,target,amt){
+  const c=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+  return '#'+c.map(v=>Math.round(v+(target-v)*amt).toString(16).padStart(2,'0')).join('');
+}
+const isLight=h=>{ const [r,g,b]=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)); return (0.299*r+0.587*g+0.114*b)>140; };
+function applyKeyColors(){
+  const st=document.documentElement.style;
+  if(keyBg){
+    const light=isLight(keyBg);
+    st.setProperty('--key',keyBg);
+    st.setProperty('--key-press',light?mixHex(keyBg,0,.14):mixHex(keyBg,255,.22));
+    st.setProperty('--key-line',light?mixHex(keyBg,0,.16):mixHex(keyBg,255,.18));
+  } else ['--key','--key-press','--key-line'].forEach(k=>st.removeProperty(k));
+  if(keyFg){ st.setProperty('--key-text',keyFg); st.setProperty('--key-fn',keyFg); }
+  else ['--key-text','--key-fn'].forEach(k=>st.removeProperty(k));
+}
+function refreshKeyUI(){
+  const d=KEY_DEFAULTS[document.documentElement.dataset.theme==='dark'?'dark':'light'];
+  const bg=keyBg||d.bg, fg=keyFg||d.fg;
+  $('kbBgPick').value=bg; $('kbBgHex').value=bg.toUpperCase();
+  $('kbFgPick').value=fg; $('kbFgHex').value=fg.toUpperCase();
+}
+function setKeyColor(which,hex){
+  if(which==='bg'){ keyBg=hex; try{ localStorage.setItem(KB_KEY,hex); }catch(e){} }
+  else { keyFg=hex; try{ localStorage.setItem(KF_KEY,hex); }catch(e){} }
+  applyKeyColors();
+}
+[['bg','kbBgPick','kbBgHex'],['fg','kbFgPick','kbFgHex']].forEach(([which,pickId,hexId])=>{
+  $(pickId).addEventListener('input',e=>{ $(hexId).value=e.target.value.toUpperCase(); setKeyColor(which,e.target.value.toLowerCase()); });
+  $(hexId).addEventListener('input',e=>{
+    const h=normHex(e.target.value);
+    if(h && (e.target.value.replace('#','').length===6)){ $(pickId).value=h; setKeyColor(which,h); }
+  });
+  $(hexId).addEventListener('change',e=>{      /* leaving the box: accept #abc too, or fall back to the current colour */
+    const h=normHex(e.target.value);
+    if(h){ $(pickId).value=h; setKeyColor(which,h); }
+    refreshKeyUI();
+  });
+});
+$('kbReset').addEventListener('click',()=>{
+  keyBg=keyFg=null;
+  try{ localStorage.removeItem(KB_KEY); localStorage.removeItem(KF_KEY); }catch(e){}
+  applyKeyColors(); refreshKeyUI();
+});
+applyKeyColors();
 
 /* ---------- theme ---------- */
 const THEME_KEY='mathsprint-theme', OLD_THEME_KEY='speedymath-theme';
@@ -205,6 +271,7 @@ function setTheme(theme){
   $('themeToggle').textContent = theme==='dark' ? '☀' : '☾';
   $('themeToggle').setAttribute('aria-label', theme==='dark' ? 'Switch to light theme' : 'Switch to dark theme');
   try{ localStorage.setItem(THEME_KEY,theme); }catch(e){}
+  refreshKeyUI();
 }
 let savedTheme=null;
 try{ savedTheme=localStorage.getItem(THEME_KEY)||localStorage.getItem(OLD_THEME_KEY); }catch(e){}
@@ -272,6 +339,35 @@ $('kMinus').addEventListener('click',()=>bumpK(-0.01));
 $('kPlus').addEventListener('click',()=>bumpK(0.01));
 $('kwMinus').addEventListener('click',()=>bumpKW(-0.005));
 $('kwPlus').addEventListener('click',()=>bumpKW(0.005));
+/* stat boxes (QUESTION / OVERALL / THIS QUESTION / CORRECT): one size for all, 1% steps, hold to repeat.
+   Smaller boxes free height, so the question area moves up and grows. */
+const SS_KEY='mathsprint-sscale', S_MIN=40, S_MAX=120;
+let sPct=100;
+try{ const v=parseInt(localStorage.getItem(SS_KEY),10); if(v>=S_MIN&&v<=S_MAX) sPct=v; }catch(e){}
+function updateSUI(){
+  document.documentElement.style.setProperty('--ss',sPct/100);
+  $('sScaleVal').textContent=sPct+'%';
+  $('sMinus').disabled=sPct<=S_MIN;
+  $('sPlus').disabled=sPct>=S_MAX;
+}
+function bumpS(d){
+  const n=Math.min(S_MAX,Math.max(S_MIN,sPct+d)); if(n===sPct) return;
+  sPct=n; try{ localStorage.setItem(SS_KEY,String(sPct)); }catch(e){}
+  updateSUI(); fitExpression();
+}
+function holdRepeat(btn,fn){
+  let t=null,iv=null;
+  const stop=()=>{ clearTimeout(t); clearInterval(iv); t=iv=null; };
+  btn.addEventListener('pointerdown',e=>{
+    if(btn.disabled) return; e.preventDefault(); fn();
+    t=setTimeout(()=>{ iv=setInterval(()=>{ if(btn.disabled) stop(); else fn(); },55); },380);
+  });
+  ['pointerup','pointerleave','pointercancel'].forEach(ev=>btn.addEventListener(ev,stop));
+  btn.addEventListener('click',e=>{ if(e.detail===0) fn(); });   /* keyboard activation */
+}
+holdRepeat($('sMinus'),()=>bumpS(-1));
+holdRepeat($('sPlus'),()=>bumpS(1));
+updateSUI();
 updateKUI();
 updateQUI();
 window.addEventListener('resize',fitExpression);
@@ -279,17 +375,22 @@ window.addEventListener('orientationchange',()=>setTimeout(fitExpression,150));
 /* re-measure once Space Grotesk has loaded, so the first question is sized with the real font */
 if(document.fonts&&document.fonts.ready) document.fonts.ready.then(fitExpression);
 
-/* Display settings: tap to open / close the size controls */
-$('dispToggle').addEventListener('click',()=>{
-  const body=$('dispBody'); body.hidden=!body.hidden;
-  $('dispToggle').setAttribute('aria-expanded',String(!body.hidden));
-  $('dispToggle').classList.toggle('open',!body.hidden);
-  $('dd2Panel').classList.toggle('disp-open',!body.hidden);   /* hides No. of que / times while Display settings is open */
-});
-function resetDisp(){
-  $('dispBody').hidden=true; $('dispToggle').classList.remove('open');
-  $('dispToggle').setAttribute('aria-expanded','false'); $('dd2Panel').classList.remove('disp-open');
+/* Display settings / Other settings: tap to open one sub-panel (it replaces the session drop-downs); ‹ Back closes it */
+function showSub(which){
+  $('dispBody').hidden = which!=='disp';
+  $('othBody').hidden = which!=='oth';
+  $('dispToggle').classList.toggle('open',which==='disp');
+  $('othToggle').classList.toggle('open',which==='oth');
+  $('dispToggle').setAttribute('aria-expanded',String(which==='disp'));
+  $('othToggle').setAttribute('aria-expanded',String(which==='oth'));
+  $('dd2Panel').classList.toggle('disp-open',which==='disp');   /* hides No. of que / times while a sub-panel is open */
+  $('dd2Panel').classList.toggle('oth-open',which==='oth');
+  if(which==='oth') refreshKeyUI();
 }
+$('dispToggle').addEventListener('click',()=>showSub('disp'));
+$('othToggle').addEventListener('click',()=>showSub('oth'));
+document.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',()=>showSub(null)));
+function resetDisp(){ showSub(null); }
 
 /* ---------- dropdowns ---------- */
 function syncDD(){
@@ -474,7 +575,7 @@ function makeQuestion(){
   const seqX = () => s.min + (index % (s.max - s.min + 1));
   if(mode==='addition_s'){
     /* random first number; the second always differs from it by exactly 1 (e.g. 3 + 4 or 3 + 2) */
-    x=rand(s.min,s.max);
+    x=randDigits(s.min,s.max);
     const up = x<=s.min ? true : x>=s.max ? false : Math.random()<.5;
     y = up ? x+1 : x-1;
     if(y<0) y=x+1;
@@ -487,16 +588,16 @@ function makeQuestion(){
   }
   else if(mode==='cube_s'){ x=seqX(); answer=x**3; expression=`${x}³ = ?`; }
   else if(mode==='addition'){
-    const n=Array.from({length:t},()=>rand(s.min,s.max));
+    const n=Array.from({length:t},()=>randDigits(s.min,s.max));
     answer=sum(n); expression=n.join(' + ');
   } else if(mode==='subtraction'){
     if(t===2){
-      x=rand(s.min,s.max); y=rand(s.min,s.max); if(y>x)[x,y]=[y,x];
+      x=randDigits(s.min,s.max); y=randDigits(s.min,s.max); if(y>x)[x,y]=[y,x];
       answer=x-y; expression=`${x} − ${y}`;
     } else {
       /* pick the answer first so the result is never negative */
-      const rest=Array.from({length:t-1},()=>rand(s.min,s.max));
-      answer=rand(s.min,s.max); x=sum(rest)+answer;
+      const rest=Array.from({length:t-1},()=>randDigits(s.min,s.max));
+      answer=randDigits(s.min,s.max); x=sum(rest)+answer;
       expression=`${x} − ${rest.join(' − ')}`;
     }
   } else if(mode==='multiplication'){
@@ -516,6 +617,13 @@ function renderClocks(){
   $('questionClock').textContent = questionLimit ? fmt(questionRemaining) : '∞';
   $('overallClock').parentElement.classList.toggle('warn', overallLimit>0 && overallRemaining<=10);
   $('qBox').classList.toggle('warn', questionLimit>0 && questionRemaining<=3);
+  /* "No limit" clocks are hidden; the remaining boxes share the row and the question area moves up */
+  $('overallClock').parentElement.hidden = !overallLimit;
+  $('qBox').hidden = !questionLimit;
+  const n = 2 + (overallLimit?1:0) + (questionLimit?1:0);
+  const st=$('stats');
+  st.classList.toggle('n3',n===3); st.classList.toggle('n2',n===2);
+  if(n!==st._n){ st._n=n; fitExpression(); }
 }
 function renderStats(){
   $('questionCount').textContent = `${Math.min(index+1,total)}/${total}`;
