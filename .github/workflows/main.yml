@@ -42,6 +42,9 @@ jobs:
             npx cap add android
           fi
 
+      - name: Generate app icon
+        run: npx --yes @capacitor/assets generate --android
+
       - name: Sync Android project
         run: npx cap sync android
 
