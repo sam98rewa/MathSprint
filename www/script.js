@@ -32,11 +32,11 @@ const presets = {
     addition_s:{min:10,max:99}, square_s:{min:2,max:30}, cube_s:{min:2,max:30}, table_s:{min:2,max:20,multMin:2,multMax:12}
   },
   hard: {
-    addition:{min:100,max:9999,terms:2}, subtraction:{min:100,max:9999,terms:2},
+    addition:{min:100,max:999,terms:2}, subtraction:{min:100,max:9999,terms:2},
     multiplication:{min:10,max:99,secondMin:10,secondMax:99,terms:2},
     square:{min:20,max:100}, cube:{min:10,max:30}, table:{min:10,max:50,multMin:10,multMax:25},
     bodmas:{min:3,max:20,tier:3}, mix:{terms:5,digits:3,sign:'mix'},
-    addition_s:{min:100,max:9999}, square_s:{min:2,max:50}, cube_s:{min:2,max:50}, table_s:{min:10,max:50,multMin:10,multMax:25}
+    addition_s:{min:100,max:999}, square_s:{min:2,max:50}, cube_s:{min:2,max:50}, table_s:{min:10,max:50,multMin:10,multMax:25}
   }
 };
 /* ranges like (2–4) are not in the labels: the box placeholder already shows them */
@@ -212,7 +212,20 @@ const KB_KEY='mathsprint-keybg', KF_KEY='mathsprint-keyfg';
 const HEX6=/^#[0-9a-f]{6}$/i;
 const KEY_DEFAULTS={dark:{bg:'#34406f',fg:'#eef2ff'}, light:{bg:'#e2e8ff',fg:'#24338c'}};
 function loadHex(k){ try{ const v=localStorage.getItem(k); if(v&&HEX6.test(v)) return v.toLowerCase(); }catch(e){} return null; }
-let keyBg=loadHex(KB_KEY), keyFg=loadHex(KF_KEY);
+/* each theme (light / dark) keeps its own keypad colours */
+const KC_KEY='mathsprint-keycolors';
+const curTheme=()=>document.documentElement.dataset.theme==='dark'?'dark':'light';
+let keyCols={light:{bg:null,fg:null},dark:{bg:null,fg:null}};
+try{
+  const sv=JSON.parse(localStorage.getItem(KC_KEY)||'null');
+  if(sv) for(const t of ['light','dark']) for(const k of ['bg','fg']) if(sv[t]&&HEX6.test(sv[t][k]||'')) keyCols[t][k]=sv[t][k].toLowerCase();
+}catch(e){}
+{ /* older single colours (before per-theme) go to the theme that is active now */
+  const ob=loadHex(KB_KEY), of=loadHex(KF_KEY), t=curTheme();
+  if(ob&&!keyCols[t].bg) keyCols[t].bg=ob; if(of&&!keyCols[t].fg) keyCols[t].fg=of;
+}
+const kc=()=>keyCols[curTheme()];
+function saveKeyCols(){ try{ localStorage.setItem(KC_KEY,JSON.stringify(keyCols)); localStorage.removeItem(KB_KEY); localStorage.removeItem(KF_KEY); }catch(e){} }
 function normHex(v){
   v=String(v).trim().replace(/^#/,'');
   if(/^[0-9a-f]{3}$/i.test(v)) v=v.split('').map(c=>c+c).join('');
@@ -224,7 +237,7 @@ function mixHex(h,target,amt){
 }
 const isLight=h=>{ const [r,g,b]=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)); return (0.299*r+0.587*g+0.114*b)>140; };
 function applyKeyColors(){
-  const st=document.documentElement.style;
+  const st=document.documentElement.style, {bg:keyBg,fg:keyFg}=kc();
   if(keyBg){
     const light=isLight(keyBg);
     st.setProperty('--key',keyBg);
@@ -235,33 +248,66 @@ function applyKeyColors(){
   else ['--key-text','--key-fn'].forEach(k=>st.removeProperty(k));
 }
 function refreshKeyUI(){
-  const d=KEY_DEFAULTS[document.documentElement.dataset.theme==='dark'?'dark':'light'];
+  const d=KEY_DEFAULTS[curTheme()], {bg:keyBg,fg:keyFg}=kc();
   const bg=keyBg||d.bg, fg=keyFg||d.fg;
-  $('kbBgPick').value=bg; $('kbBgHex').value=bg.toUpperCase();
-  $('kbFgPick').value=fg; $('kbFgHex').value=fg.toUpperCase();
+  $('kbBgPick').style.setProperty('--sw',bg); $('kbBgHex').value=bg.toUpperCase();
+  $('kbFgPick').style.setProperty('--sw',fg); $('kbFgHex').value=fg.toUpperCase();
 }
 function setKeyColor(which,hex){
-  if(which==='bg'){ keyBg=hex; try{ localStorage.setItem(KB_KEY,hex); }catch(e){} }
-  else { keyFg=hex; try{ localStorage.setItem(KF_KEY,hex); }catch(e){} }
+  kc()[which]=hex; saveKeyCols();
   applyKeyColors();
 }
 [['bg','kbBgPick','kbBgHex'],['fg','kbFgPick','kbFgHex']].forEach(([which,pickId,hexId])=>{
-  $(pickId).addEventListener('input',e=>{ $(hexId).value=e.target.value.toUpperCase(); setKeyColor(which,e.target.value.toLowerCase()); });
+  $(pickId).addEventListener('click',()=>openPicker(which));
   $(hexId).addEventListener('input',e=>{
     const h=normHex(e.target.value);
-    if(h && (e.target.value.replace('#','').length===6)){ $(pickId).value=h; setKeyColor(which,h); }
+    if(h && (e.target.value.replace('#','').length===6)){ $(pickId).style.setProperty('--sw',h); setKeyColor(which,h); }
   });
   $(hexId).addEventListener('change',e=>{      /* leaving the box: accept #abc too, or fall back to the current colour */
     const h=normHex(e.target.value);
-    if(h){ $(pickId).value=h; setKeyColor(which,h); }
+    if(h) setKeyColor(which,h);
     refreshKeyUI();
   });
 });
-$('kbReset').addEventListener('click',()=>{
-  keyBg=keyFg=null;
-  try{ localStorage.removeItem(KB_KEY); localStorage.removeItem(KF_KEY); }catch(e){}
-  applyKeyColors(); refreshKeyUI();
-});
+
+/* ---------- colour picker pop-up: hue + saturation/value, chosen colour preview, Cancel / Set ---------- */
+let cpWhich=null, cpH=0, cpS=1, cpV=1;
+function hsvToHex(h,s,v){
+  const f=n=>{ const k=(n+h/60)%6; return v-v*s*Math.max(0,Math.min(k,4-k,1)); };
+  return '#'+[f(5),f(3),f(1)].map(x=>Math.round(x*255).toString(16).padStart(2,'0')).join('');
+}
+function hexToHsv(hex){
+  const [r,g,b]=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255);
+  const mx=Math.max(r,g,b), mn=Math.min(r,g,b), d=mx-mn; let h=0;
+  if(d){ h = mx===r ? ((g-b)/d)%6 : mx===g ? (b-r)/d+2 : (r-g)/d+4; h*=60; if(h<0) h+=360; }
+  return [h, mx?d/mx:0, mx];
+}
+function paintPicker(){
+  const hex=hsvToHex(cpH,cpS,cpV);
+  $('cpSV').style.setProperty('--hue',`hsl(${cpH},100%,50%)`);
+  $('cpSVThumb').style.left=(cpS*100)+'%'; $('cpSVThumb').style.top=((1-cpV)*100)+'%';
+  $('cpSVThumb').style.setProperty('--sw',hex);
+  $('cpHueThumb').style.left=(cpH/360*100)+'%'; $('cpHueThumb').style.setProperty('--sw',`hsl(${cpH},100%,50%)`);
+  $('cpPrev').style.background=hex;
+}
+function dragOn(el,fn){
+  const move=e=>{ const r=el.getBoundingClientRect(); fn(Math.min(1,Math.max(0,(e.clientX-r.left)/r.width)),Math.min(1,Math.max(0,(e.clientY-r.top)/r.height))); paintPicker(); };
+  el.addEventListener('pointerdown',e=>{ e.preventDefault(); el.setPointerCapture(e.pointerId); move(e); el.onpointermove=move; });
+  const end=()=>{ el.onpointermove=null; };
+  el.addEventListener('pointerup',end); el.addEventListener('pointercancel',end);
+}
+dragOn($('cpSV'),(x,y)=>{ cpS=x; cpV=1-y; });
+dragOn($('cpHue'),x=>{ cpH=x*360; });
+function openPicker(which){
+  cpWhich=which;
+  const d=KEY_DEFAULTS[curTheme()];
+  [cpH,cpS,cpV]=hexToHsv(kc()[which]||d[which]);
+  paintPicker(); $('cpBack').hidden=false;
+}
+function closePicker(){ $('cpBack').hidden=true; cpWhich=null; }
+$('cpCancel').addEventListener('click',closePicker);
+$('cpSet').addEventListener('click',()=>{ if(cpWhich) setKeyColor(cpWhich,hsvToHex(cpH,cpS,cpV)); refreshKeyUI(); closePicker(); });
+$('cpBack').addEventListener('pointerdown',e=>{ if(e.target===$('cpBack')) closePicker(); });
 applyKeyColors();
 
 /* ---------- theme ---------- */
@@ -271,7 +317,7 @@ function setTheme(theme){
   $('themeToggle').textContent = theme==='dark' ? '☀' : '☾';
   $('themeToggle').setAttribute('aria-label', theme==='dark' ? 'Switch to light theme' : 'Switch to dark theme');
   try{ localStorage.setItem(THEME_KEY,theme); }catch(e){}
-  refreshKeyUI();
+  applyKeyColors(); refreshKeyUI();
 }
 let savedTheme=null;
 try{ savedTheme=localStorage.getItem(THEME_KEY)||localStorage.getItem(OLD_THEME_KEY); }catch(e){}
@@ -308,6 +354,7 @@ function fitExpression(){
     const availH=el.clientHeight;
     if(availH>0){ const capH=Math.max(10,Math.floor(availH/1.15)); if(parseFloat(el.style.fontSize)>capH) el.style.fontSize=capH+'px'; }
   }
+  applyY();
 }
 function updateQUI(){
   $('qScaleVal').textContent=Math.round(qScale*100)+'%';
@@ -365,6 +412,70 @@ function holdRepeat(btn,fn){
   ['pointerup','pointerleave','pointercancel'].forEach(ev=>btn.addEventListener(ev,stop));
   btn.addEventListener('click',e=>{ if(e.detail===0) fn(); });   /* keyboard activation */
 }
+/* question and answer line (answer + "Answer submits automatically" together): move up / down, 1 px per step.
+   Default (value 0): the question sits 4 mm under the stat boxes and the answer 1.5 cm under the question.
+   Nothing can go closer than 4 mm to the stat boxes above or the keypad below (limits are measured live). */
+const QY_KEY='mathsprint-qy2', AY_KEY='mathsprint-ay2', Y_LIM=600;
+const MM=96/25.4, GAP_PX=4*MM, QA_PX=15*MM;
+function loadY(k){ try{ const v=parseInt(localStorage.getItem(k),10); if(v>=-Y_LIM&&v<=Y_LIM) return v; }catch(e){} return 0; }
+let qY=loadY(QY_KEY), aY=loadY(AY_KEY);   /* what the user chose, relative to the defaults */
+let qT=0, aT=0, yInfo=null;               /* total shift applied right now (default + user, within limits) */
+const fmtY=v=>v===0?'0':(v<0?'↑ ':'↓ ')+Math.abs(v);
+const clampR=(v,r)=>Math.min(r[1],Math.max(r[0],v));
+function textRect(el){ const r=document.createRange(); r.selectNodeContents(el); return r.getBoundingClientRect(); }
+function yMeasure(){
+  if(practice.hidden||$('quiz').hidden) return null;
+  const st=$('stats').getBoundingClientRect(); if(!st.height) return null;
+  const kp=$('keypad'), kpOn=getComputedStyle(kp).display!=='none';
+  const qz=$('quiz').getBoundingClientRect();
+  const top=st.bottom+GAP_PX;
+  const bottom=(kpOn ? kp.getBoundingClientRect().top : qz.bottom-parseFloat(getComputedStyle($('quiz')).paddingBottom)) - GAP_PX;
+  const ex=textRect($('expression')), an=$('answer').getBoundingClientRect(), fb=$('feedback').getBoundingClientRect();
+  const qTop=ex.top-qT, qBot=ex.bottom-qT, aTop=an.top-aT, aBot=fb.bottom-aT;   /* untransformed positions */
+  const defQ=Math.ceil(top-qTop);                                              /* question exactly 4 mm under the stats */
+  const defA=Math.ceil((qBot+defQ+QA_PX)-aTop);                               /* answer 1.5 cm under the question */
+  return {defQ,defA,qBot,aTop,q:[Math.ceil(top-qTop),Math.floor(bottom-qBot)],a:[Math.ceil(top-aTop),Math.floor(bottom-aBot)]};
+}
+function applyY(){
+  const M=yMeasure();
+  if(M){
+    /* the answer must always stay at least 1.5 cm under the question:
+       the question can only go down as far as the answer can follow (before the keypad gap),
+       and the answer can only go up as far as the question's bottom + 1.5 cm */
+    const qMax=Math.max(M.q[0],Math.min(M.q[1],Math.floor(M.aTop+M.a[1]-QA_PX-M.qBot)));
+    const qR=[M.q[0],qMax];
+    qT=clampR(M.defQ+qY,qR);
+    const aMin=Math.max(M.a[0],Math.ceil(M.qBot+qT+QA_PX-M.aTop));
+    const aR=[aMin,Math.max(aMin,M.a[1])];
+    aT=clampR(M.defA+aY,aR);
+    yInfo={defQ:M.defQ,defA:M.defA,q:qR,a:aR};
+    const st=document.documentElement.style; st.setProperty('--qy',qT+'px'); st.setProperty('--ay',aT+'px');
+  }
+  const I=yInfo, rq=I?I.q:[-Y_LIM,Y_LIM], ra=I?I.a:[-Y_LIM,Y_LIM];
+  $('qyVal').textContent=fmtY(I?qT-I.defQ:0); $('ayVal').textContent=fmtY(I?aT-I.defA:0);
+  $('qyUp').disabled=!!I&&qT<=rq[0]; $('qyDown').disabled=!!I&&qT>=rq[1];
+  $('ayUp').disabled=!!I&&aT<=ra[0]; $('ayDown').disabled=!!I&&aT>=ra[1];
+}
+function bumpY(which,d){
+  applyY(); const I=yInfo; if(!I) return;
+  if(which==='q'){ qY=clampR(qT+d,I.q)-I.defQ; try{ localStorage.setItem(QY_KEY,String(qY)); }catch(e){} }
+  else { aY=clampR(aT+d,I.a)-I.defA; try{ localStorage.setItem(AY_KEY,String(aY)); }catch(e){} }
+  applyY();
+}
+holdRepeat($('qyUp'),()=>bumpY('q',-1)); holdRepeat($('qyDown'),()=>bumpY('q',1));
+holdRepeat($('ayUp'),()=>bumpY('a',-1)); holdRepeat($('ayDown'),()=>bumpY('a',1));
+applyY();
+$('othReset').addEventListener('click',()=>{
+  sPct=100; qY=0; aY=0;
+  keyCols={light:{bg:null,fg:null},dark:{bg:null,fg:null}};   /* both themes are reset */
+  try{ [SS_KEY,QY_KEY,AY_KEY,KB_KEY,KF_KEY,KC_KEY].forEach(k=>localStorage.removeItem(k)); }catch(e){}
+  updateSUI(); applyKeyColors(); refreshKeyUI(); fitExpression(); applyY();
+});
+$('dispReset').addEventListener('click',()=>{
+  qScale=1; kScale=1; kwScale=1;
+  saveScale(QS_KEY,1); saveScale(KS_KEY,1); saveScale(KW_KEY,1);
+  updateQUI(); updateKUI(); fitExpression();
+});
 holdRepeat($('sMinus'),()=>bumpS(-1));
 holdRepeat($('sPlus'),()=>bumpS(1));
 updateSUI();
@@ -404,8 +515,8 @@ function toggleDD(which){
 }
 $('dd1Btn').addEventListener('click',e=>{e.stopPropagation();toggleDD('dd1');});
 $('dd2Btn').addEventListener('click',e=>{e.stopPropagation();toggleDD('dd2');});
-document.addEventListener('click',e=>{ if(!e.target.closest('.dd')) closeDropdowns(); });
-document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeDropdowns(); $('rPanel').classList.remove('open'); } });
+document.addEventListener('click',e=>{ if(!e.target.closest('.dd,.cp-back')) closeDropdowns(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ if(!$('cpBack').hidden){ closePicker(); return; } closeDropdowns(); $('rPanel').classList.remove('open'); } });
 
 /* Successive Addition and In-sequence Squares / Cubes / Tables: no Easy / Medium / Hard — just a range */
 const isSeq = m => ['square_s','cube_s','table_s'].includes(m);   /* addition_s now has Easy / Medium / Hard / Custom like the other drills */
