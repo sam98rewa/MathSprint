@@ -45,7 +45,16 @@ jobs:
       - name: Generate app icons from assets/
         run: |
           npm install --no-save @capacitor/assets
-          npx capacitor-assets generate --android
+          ICON=$(find . -type f -iname "icon-only.png" -not -path "./node_modules/*" -not -path "./android/*" | head -n 1)
+          if [ -z "$ICON" ]; then
+            echo "::error::icon-only.png not found in the repo. Files in repo root:"
+            ls -la
+            exit 1
+          fi
+          ASSET_DIR=$(dirname "$ICON")
+          echo "Using icons from: $ASSET_DIR"
+          ls -la "$ASSET_DIR"
+          npx capacitor-assets generate --android --assetPath "$ASSET_DIR"
 
       - name: Sync Android project
         run: npx cap sync android
