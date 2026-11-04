@@ -1,4 +1,3 @@
-
 name: Build MathSprint APK
 
 on:
@@ -42,6 +41,11 @@ jobs:
           if [ ! -d android ]; then
             npx cap add android
           fi
+
+      - name: Generate app icons from assets/
+        run: |
+          npm install --no-save @capacitor/assets
+          npx capacitor-assets generate --android
 
       - name: Sync Android project
         run: npx cap sync android
