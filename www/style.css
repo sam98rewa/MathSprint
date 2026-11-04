@@ -334,7 +334,7 @@ body.in-practice .orb,body.in-practice .sym{animation:none}
   body.in-quiz .keypad{flex:none;margin:0 auto}
   body.in-quiz .keypad button{height:calc(clamp(40px,6.6dvh,56px) * var(--ks,1));font-size:calc(22px * var(--ks,1))}
   body.in-quiz .keypad .k-fn{font-size:calc(18px * var(--ks,1))}
-  body.in-quiz .keypad{width:min(calc(320px * var(--ks,1)),100%);gap:calc(8px * var(--ks,1))}
+  body.in-quiz .keypad{width:min(calc(320px * var(--kw,1)),100%);gap:calc(8px * var(--kw,1))}
   /* result screen scrolls inside its own box if taller than the screen */
   body.in-quiz #done{flex:1 1 0;min-height:0;overflow-y:auto}
 }
