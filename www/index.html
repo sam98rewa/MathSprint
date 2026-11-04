@@ -129,19 +129,26 @@
               <div class="fontrow" id="keyWRow"><span>Keypad width</span>
                 <div class="fontctl"><button class="btn" id="kwMinus" type="button" aria-label="Narrower keypad">W−</button><b id="kwScaleVal">100%</b><button class="btn" id="kwPlus" type="button" aria-label="Wider keypad">W+</button></div>
               </div>
+              <button class="kb-reset" id="dispReset" type="button">Reset</button>
             </div>
             <div class="disp-body oth-body" id="othBody" hidden>
               <button class="sub-back" type="button" data-back>‹ Back</button>
               <div class="fontrow o-wide"><span>Stat boxes size</span>
                 <div class="fontctl"><button class="btn" id="sMinus" type="button" aria-label="Smaller stat boxes">S−</button><b id="sScaleVal">100%</b><button class="btn" id="sPlus" type="button" aria-label="Larger stat boxes">S+</button></div>
               </div>
+              <div class="fontrow"><span>Question up / down</span>
+                <div class="fontctl"><button class="btn" id="qyUp" type="button" aria-label="Move question up">▲</button><b id="qyVal">0</b><button class="btn" id="qyDown" type="button" aria-label="Move question down">▼</button></div>
+              </div>
+              <div class="fontrow"><span>Answer up / down</span>
+                <div class="fontctl"><button class="btn" id="ayUp" type="button" aria-label="Move answer line up">▲</button><b id="ayVal">0</b><button class="btn" id="ayDown" type="button" aria-label="Move answer line down">▼</button></div>
+              </div>
               <div class="fontrow" id="kbBgRow"><span>Keypad colour</span>
-                <div class="colorctl"><input type="color" id="kbBgPick" aria-label="Keypad background colour"><input type="text" id="kbBgHex" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Keypad background hex"></div>
+                <div class="colorctl"><button type="button" class="swatch" id="kbBgPick" aria-label="Pick keypad background colour"></button><input type="text" id="kbBgHex" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Keypad background hex"></div>
               </div>
               <div class="fontrow" id="kbFgRow"><span>Keypad text</span>
-                <div class="colorctl"><input type="color" id="kbFgPick" aria-label="Keypad text colour"><input type="text" id="kbFgHex" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Keypad text hex"></div>
+                <div class="colorctl"><button type="button" class="swatch" id="kbFgPick" aria-label="Pick keypad text colour"></button><input type="text" id="kbFgHex" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Keypad text hex"></div>
               </div>
-              <button class="kb-reset" id="kbReset" type="button">Reset keypad colours</button>
+              <button class="kb-reset" id="othReset" type="button">Reset</button>
             </div>
             <button class="btn primary full" id="applySettings" type="button">Apply &amp; restart</button>
           </div>
@@ -214,6 +221,15 @@
   </main>
 
   <footer><span>MathSprint</span><span>© 2026 All rights reserved.</span></footer>
+  <!-- colour picker: hue + saturation/value only, shows the chosen colour, Cancel / Set -->
+  <div class="cp-back" id="cpBack" hidden>
+    <div class="cp-card" role="dialog" aria-modal="true" aria-label="Choose colour">
+      <div class="cp-sv" id="cpSV"><i class="cp-thumb" id="cpSVThumb"></i></div>
+      <div class="cp-hue" id="cpHue"><i class="cp-thumb" id="cpHueThumb"></i></div>
+      <div class="cp-prev" id="cpPrev"></div>
+      <div class="cp-actions"><button class="btn" id="cpCancel" type="button">Cancel</button><button class="btn primary" id="cpSet" type="button">Set</button></div>
+    </div>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
