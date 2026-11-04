@@ -94,7 +94,7 @@
             <button class="dd-item" data-level="easy" type="button">Easy</button>
             <button class="dd-item" data-level="medium" type="button">Medium</button>
             <button class="dd-item" data-level="hard" type="button">Hard</button>
-            <button class="dd-item" data-level="custom" type="button">Custom…</button>
+            <button class="dd-item" data-level="custom" type="button">Custom</button>
             <div id="customBox" hidden>
               <div class="custom-grid" id="customFields"></div>
               <button class="btn primary full" id="applyCustom" type="button">Apply &amp; restart</button>
@@ -114,8 +114,12 @@
             <label class="set-row"><span>Per question time</span>
               <select id="questionTime"><option value="0">No limit</option><option value="5">5 sec</option><option value="10" selected>10 sec</option><option value="15">15 sec</option><option value="20">20 sec</option><option value="30">30 sec</option><option value="60">60 sec</option></select>
             </label>
-            <button class="disp-toggle" id="dispToggle" type="button" aria-expanded="false" aria-controls="dispBody"><span>Display settings</span><i aria-hidden="true">▾</i></button>
+            <div class="set-links">
+              <button class="disp-toggle" id="dispToggle" type="button" aria-expanded="false" aria-controls="dispBody"><span>Display settings</span><i aria-hidden="true">▾</i></button>
+              <button class="disp-toggle" id="othToggle" type="button" aria-expanded="false" aria-controls="othBody"><span>Other settings</span><i aria-hidden="true">▾</i></button>
+            </div>
             <div class="disp-body" id="dispBody" hidden>
+              <button class="sub-back" type="button" data-back>‹ Back</button>
               <div class="fontrow"><span>Que size</span>
                 <div class="fontctl"><button class="btn" id="qMinus" type="button" aria-label="Smaller question text">A−</button><b id="qScaleVal">100%</b><button class="btn" id="qPlus" type="button" aria-label="Larger question text">A+</button></div>
               </div>
@@ -126,6 +130,19 @@
                 <div class="fontctl"><button class="btn" id="kwMinus" type="button" aria-label="Narrower keypad">W−</button><b id="kwScaleVal">100%</b><button class="btn" id="kwPlus" type="button" aria-label="Wider keypad">W+</button></div>
               </div>
             </div>
+            <div class="disp-body oth-body" id="othBody" hidden>
+              <button class="sub-back" type="button" data-back>‹ Back</button>
+              <div class="fontrow o-wide"><span>Stat boxes size</span>
+                <div class="fontctl"><button class="btn" id="sMinus" type="button" aria-label="Smaller stat boxes">S−</button><b id="sScaleVal">100%</b><button class="btn" id="sPlus" type="button" aria-label="Larger stat boxes">S+</button></div>
+              </div>
+              <div class="fontrow" id="kbBgRow"><span>Keypad colour</span>
+                <div class="colorctl"><input type="color" id="kbBgPick" aria-label="Keypad background colour"><input type="text" id="kbBgHex" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Keypad background hex"></div>
+              </div>
+              <div class="fontrow" id="kbFgRow"><span>Keypad text</span>
+                <div class="colorctl"><input type="color" id="kbFgPick" aria-label="Keypad text colour"><input type="text" id="kbFgHex" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Keypad text hex"></div>
+              </div>
+              <button class="kb-reset" id="kbReset" type="button">Reset keypad colours</button>
+            </div>
             <button class="btn primary full" id="applySettings" type="button">Apply &amp; restart</button>
           </div>
         </div>
@@ -134,7 +151,7 @@
       </div>
 
       <section class="quiz-card" id="quiz">
-        <div class="stats">
+        <div class="stats" id="stats">
           <div><span>QUESTION</span><strong id="questionCount">1/20</strong></div>
           <div><span>OVERALL</span><strong id="overallClock">05:00</strong></div>
           <div id="qBox"><span>THIS QUESTION</span><strong id="questionClock">00:10</strong></div>
