@@ -19,24 +19,24 @@ const levelNames = {easy:'Easy', medium:'Medium', hard:'Hard', custom:'Custom'};
 const presets = {
   easy: {
     addition:{min:1,max:20,terms:2}, subtraction:{min:1,max:20,terms:2},
-    multiplication:{min:2,max:10,secondMin:2,secondMax:10,terms:2},
-    square:{min:2,max:20}, cube:{min:2,max:10}, table:{min:2,max:12,multMin:2,multMax:10},
+    multiplication:{min:2,max:9,secondMin:2,secondMax:9,terms:2},
+    square:{min:2,max:20}, cube:{min:2,max:10}, table:{min:2,max:10,multMin:2,multMax:10},
     bodmas:{min:2,max:9,tier:1}, mix:{terms:3,digits:1,sign:'mix'},
-    addition_s:{min:1,max:15}, square_s:{min:2,max:20}, cube_s:{min:2,max:20}, table_s:{min:2,max:12,multMin:2,multMax:10}
+    addition_s:{min:1,max:15}, square_s:{min:2,max:30}, cube_s:{min:2,max:30}, table_s:{min:2,max:9,multMin:1,multMax:10}
   },
   medium: {
     addition:{min:10,max:99,terms:2}, subtraction:{min:10,max:99,terms:2},
-    multiplication:{min:2,max:30,secondMin:2,secondMax:30,terms:2},
-    square:{min:2,max:30}, cube:{min:2,max:12}, table:{min:2,max:20,multMin:2,multMax:12},
+    multiplication:{min:10,max:50,secondMin:2,secondMax:9,terms:2},
+    square:{min:2,max:30}, cube:{min:10,max:20}, table:{min:10,max:20,multMin:2,multMax:10},
     bodmas:{min:2,max:12,tier:2}, mix:{terms:3,digits:2,sign:'mix'},
-    addition_s:{min:10,max:99}, square_s:{min:2,max:30}, cube_s:{min:2,max:30}, table_s:{min:2,max:20,multMin:2,multMax:12}
+    addition_s:{min:10,max:99}, square_s:{min:2,max:30}, cube_s:{min:2,max:30}, table_s:{min:12,max:20,multMin:1,multMax:10}
   },
   hard: {
-    addition:{min:100,max:999,terms:2}, subtraction:{min:100,max:9999,terms:2},
-    multiplication:{min:10,max:99,secondMin:10,secondMax:99,terms:2},
-    square:{min:20,max:100}, cube:{min:10,max:30}, table:{min:10,max:50,multMin:10,multMax:25},
+    addition:{min:100,max:999,terms:2}, subtraction:{min:100,max:999,terms:2},
+    multiplication:{min:50,max:99,secondMin:2,secondMax:9,terms:2},
+    square:{min:20,max:100}, cube:{min:20,max:30}, table:{min:20,max:25,multMin:2,multMax:10},
     bodmas:{min:3,max:20,tier:3}, mix:{terms:5,digits:3,sign:'mix'},
-    addition_s:{min:100,max:999}, square_s:{min:2,max:50}, cube_s:{min:2,max:50}, table_s:{min:10,max:50,multMin:10,multMax:25}
+    addition_s:{min:100,max:999}, square_s:{min:2,max:30}, cube_s:{min:2,max:30}, table_s:{min:21,max:25,multMin:1,multMax:10}
   }
 };
 /* ranges like (2–4) are not in the labels: the box placeholder already shows them */
@@ -445,8 +445,10 @@ function applyY(){
     const qMax=Math.max(M.q[0],Math.min(M.q[1],Math.floor(M.aTop+M.a[1]-QA_PX-M.qBot)));
     const qR=[M.q[0],qMax];
     qT=clampR(M.defQ+qY,qR);
-    const aMin=Math.max(M.a[0],Math.ceil(M.qBot+qT+QA_PX-M.aTop));
-    const aR=[aMin,Math.max(aMin,M.a[1])];
+    /* the keypad gap is a HARD limit: the answer line can never go under the keypad, even when the 1.5 cm rule cannot be met */
+    const aHi=Math.max(M.a[0],M.a[1]);
+    const aMin=Math.min(aHi,Math.max(M.a[0],Math.ceil(M.qBot+qT+QA_PX-M.aTop)));
+    const aR=[aMin,aHi];
     aT=clampR(M.defA+aY,aR);
     yInfo={defQ:M.defQ,defA:M.defA,q:qR,a:aR};
     const st=document.documentElement.style; st.setProperty('--qy',qT+'px'); st.setProperty('--ay',aT+'px');
@@ -465,6 +467,8 @@ function bumpY(which,d){
 holdRepeat($('qyUp'),()=>bumpY('q',-1)); holdRepeat($('qyDown'),()=>bumpY('q',1));
 holdRepeat($('ayUp'),()=>bumpY('a',-1)); holdRepeat($('ayDown'),()=>bumpY('a',1));
 applyY();
+/* re-clamp whenever the keypad / card size changes (keypad height, rotation, settings panel, fonts) so the answer can never end up hidden behind the keypad */
+if(window.ResizeObserver){ const ro=new ResizeObserver(()=>applyY()); ro.observe($('keypad')); ro.observe($('quiz')); ro.observe($('stats')); }
 $('othReset').addEventListener('click',()=>{
   sPct=100; qY=0; aY=0;
   keyCols={light:{bg:null,fg:null},dark:{bg:null,fg:null}};   /* both themes are reset */
@@ -519,7 +523,7 @@ document.addEventListener('click',e=>{ if(!e.target.closest('.dd,.cp-back')) clo
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ if(!$('cpBack').hidden){ closePicker(); return; } closeDropdowns(); $('rPanel').classList.remove('open'); } });
 
 /* Successive Addition and In-sequence Squares / Cubes / Tables: no Easy / Medium / Hard — just a range */
-const isSeq = m => ['square_s','cube_s','table_s'].includes(m);   /* addition_s now has Easy / Medium / Hard / Custom like the other drills */
+const isSeq = m => ['square_s','cube_s'].includes(m);   /* addition_s now has Easy / Medium / Hard / Custom like the other drills */
 function markLevel(){
   $('levelLabel').textContent = isSeq(mode) ? 'Range' : levelNames[level];
   document.querySelectorAll('.dd-item').forEach(b=>b.classList.toggle('selected',b.dataset.level===level));
@@ -1103,3 +1107,23 @@ $('reviewButton').addEventListener('click',()=>{
     e.preventDefault();
   }));
 markLevel();
+
+/* ---------- portrait only ---------- */
+try{ if(screen.orientation&&screen.orientation.lock) screen.orientation.lock('portrait').catch(()=>{}); }catch(e){}
+document.addEventListener('click',()=>{ try{ if(screen.orientation&&screen.orientation.lock) screen.orientation.lock('portrait').catch(()=>{}); }catch(e){} },{once:true});
+
+/* ---------- fixed app height: the system keyboard must not move or resize the screen ---------- */
+(function(){
+  let H=0;
+  const typing=()=>{ const a=document.activeElement; return a&&a.tagName==='INPUT'&&!a.readOnly; };
+  function setH(force){
+    const h=window.innerHeight;
+    /* ignore the shrink caused by the keyboard: only accept a bigger height, or any height on rotation / when not typing */
+    if(force||!H||h>H||!typing()){ H=h; document.documentElement.style.setProperty('--app-h',H+'px'); }
+  }
+  setH(true);
+  window.addEventListener('resize',()=>setH(false));
+  window.addEventListener('orientationchange',()=>setTimeout(()=>setH(true),200));
+  /* keep the page from being scrolled up when a settings box gets focus */
+  document.addEventListener('focusin',e=>{ if(e.target.matches&&e.target.matches('input')){ setTimeout(()=>window.scrollTo(0,0),0); } });
+})();
