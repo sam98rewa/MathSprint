@@ -317,7 +317,7 @@ body.in-practice .orb,body.in-practice .sym{animation:none}
    The question text lives only inside its own zone, so changing its size can never move the keypad. */
 @media(max-width:560px){
   html:has(body.in-quiz){height:100%;overflow:hidden}
-  body.in-quiz{height:100vh;height:100dvh;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+  body.in-quiz{height:var(--app-h,100vh);min-height:0;overflow:hidden;display:flex;flex-direction:column}
   body.in-quiz .site-header{flex:none}
   body.in-quiz main{flex:1 1 0;min-height:0;display:flex;flex-direction:column;margin:0 auto 8px}
   body.in-quiz #practice{flex:1 1 0;min-height:0;display:flex;flex-direction:column}
@@ -332,7 +332,7 @@ body.in-practice .orb,body.in-practice .sym{animation:none}
   body.in-quiz .feedback{flex:none;height:22px;min-height:0;margin:6px 0 14px;line-height:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   /* keypad zone: fixed size, pinned to the bottom, independent of the question */
   body.in-quiz .keypad{flex:none;margin:0 auto}
-  body.in-quiz .keypad button{height:calc(clamp(40px,6.6dvh,56px) * var(--ks,1));font-size:calc(22px * var(--ks,1))}
+  body.in-quiz .keypad button{height:calc(clamp(40px,calc(var(--app-h,100vh) * .066),56px) * var(--ks,1));font-size:calc(22px * var(--ks,1))}
   body.in-quiz .keypad .k-fn{font-size:calc(18px * var(--ks,1))}
   body.in-quiz .keypad{width:min(calc(320px * var(--kw,1)),100%);gap:calc(8px * var(--kw,1))}
   /* result screen scrolls inside its own box if taller than the screen */
@@ -517,3 +517,12 @@ body.in-practice .feedback{pointer-events:none}
 /* reset buttons sit under their settings; at least 4 mm between the answer line and the keypad */
 .disp-body .kb-reset{display:block;margin:10px auto 4px}
 @media(max-width:560px){ body.in-quiz .feedback{margin-bottom:16px} }
+/* ===== portrait only: block landscape on phones ===== */
+.rotate-lock{display:none}
+@media(orientation:landscape) and (max-height:500px){
+  .rotate-lock{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--bg);color:var(--text);text-align:center}
+  .rotate-lock span{font-size:44px;color:var(--accent)}
+  .rotate-lock p{margin:0;font-weight:700}
+}
+/* system keyboard must not shift the fixed phone layout */
+@media(max-width:560px){ body.in-quiz .dd-panel{max-height:calc(var(--app-h,100vh) - 130px);overflow-y:auto} }
