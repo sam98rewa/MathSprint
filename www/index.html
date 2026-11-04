@@ -105,20 +105,26 @@
         <div class="dd" id="dd2">
           <button class="btn dd-btn" id="dd2Btn" type="button" aria-haspopup="true" aria-expanded="false">Settings ▾</button>
           <div class="dd-panel wide" id="dd2Panel" hidden>
-            <label>No. of questions
+            <label class="set-row"><span>No. of questions</span>
               <select id="count"><option value="10">10</option><option value="20" selected>20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option></select>
             </label>
-            <label>Overall time
+            <label class="set-row"><span>Overall time</span>
               <select id="overallTime"><option value="0">No limit</option><option value="60">1 min</option><option value="180">3 min</option><option value="300" selected>5 min</option><option value="600">10 min</option><option value="900">15 min</option></select>
             </label>
-            <label>Per-question time
+            <label class="set-row"><span>Per question time</span>
               <select id="questionTime"><option value="0">No limit</option><option value="5">5 sec</option><option value="10" selected>10 sec</option><option value="15">15 sec</option><option value="20">20 sec</option><option value="30">30 sec</option><option value="60">60 sec</option></select>
             </label>
-            <div class="fontrow"><span>Que size</span>
-              <div class="fontctl"><button class="btn" id="qMinus" type="button" aria-label="Smaller question text">A−</button><b id="qScaleVal">100%</b><button class="btn" id="qPlus" type="button" aria-label="Larger question text">A+</button></div>
-            </div>
-            <div class="fontrow" id="keyRow"><span>Keypad size</span>
-              <div class="fontctl"><button class="btn" id="kMinus" type="button" aria-label="Smaller keypad">K−</button><b id="kScaleVal">100%</b><button class="btn" id="kPlus" type="button" aria-label="Larger keypad">K+</button></div>
+            <button class="disp-toggle" id="dispToggle" type="button" aria-expanded="false" aria-controls="dispBody"><span>Display settings</span><i aria-hidden="true">▾</i></button>
+            <div class="disp-body" id="dispBody" hidden>
+              <div class="fontrow"><span>Que size</span>
+                <div class="fontctl"><button class="btn" id="qMinus" type="button" aria-label="Smaller question text">A−</button><b id="qScaleVal">100%</b><button class="btn" id="qPlus" type="button" aria-label="Larger question text">A+</button></div>
+              </div>
+              <div class="fontrow" id="keyRow"><span>Keypad height</span>
+                <div class="fontctl"><button class="btn" id="kMinus" type="button" aria-label="Shorter keypad">K−</button><b id="kScaleVal">100%</b><button class="btn" id="kPlus" type="button" aria-label="Taller keypad">K+</button></div>
+              </div>
+              <div class="fontrow" id="keyWRow"><span>Keypad width</span>
+                <div class="fontctl"><button class="btn" id="kwMinus" type="button" aria-label="Narrower keypad">W−</button><b id="kwScaleVal">100%</b><button class="btn" id="kwPlus" type="button" aria-label="Wider keypad">W+</button></div>
+              </div>
             </div>
             <button class="btn primary full" id="applySettings" type="button">Apply &amp; restart</button>
           </div>
@@ -190,7 +196,7 @@
     </section>
   </main>
 
-  <footer><span>MathSprint</span><span>Small steps. Faster calculations.</span></footer>
+  <footer><span>MathSprint</span><span>© 2026 All rights reserved.</span></footer>
   <script src="script.js"></script>
 </body>
 </html>
