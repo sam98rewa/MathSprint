@@ -252,17 +252,26 @@ $('qPlus').addEventListener('click',()=>{ qScale=stepScale(qScale,0.1,Q_MIN,Q_MA
 /* keypad size (phones): scales key height + digits; the question zone takes whatever space is left */
 const KS_KEY='mathsprint-kscale', K_MIN=0.7, K_MAX=1.3;
 let kScale=loadScale(KS_KEY,K_MIN,K_MAX);
+/* keypad width (phones): its own setting, 0.5% steps, can go below 100% */
+const KW_KEY='mathsprint-kwscale', KW_MIN=0.6, KW_MAX=1.3;
+let kwScale=loadScale(KW_KEY,KW_MIN,KW_MAX);
 function updateKUI(){
   document.documentElement.style.setProperty('--ks',kScale);
-  /* width + gaps never shrink below 100%: smaller sizes squash the keys from the top (height only) */
-  document.documentElement.style.setProperty('--kw',Math.max(kScale,1));
+  /* key height follows --ks; width + gaps follow the width setting (and still grow with K+ above 100%) */
+  document.documentElement.style.setProperty('--kw',kwScale*Math.max(kScale,1));
   $('kScaleVal').textContent=Math.round(kScale*100)+'%';
   $('kMinus').disabled=kScale<=K_MIN+1e-6;
   $('kPlus').disabled=kScale>=K_MAX-1e-6;
+  $('kwScaleVal').textContent=(Math.round(kwScale*1000)/10)+'%';
+  $('kwMinus').disabled=kwScale<=KW_MIN+1e-6;
+  $('kwPlus').disabled=kwScale>=KW_MAX-1e-6;
 }
 function bumpK(d){ kScale=Math.min(K_MAX,Math.max(K_MIN,Math.round((kScale+d)*100)/100)); saveScale(KS_KEY,kScale); updateKUI(); fitExpression(); }
+function bumpKW(d){ kwScale=Math.min(KW_MAX,Math.max(KW_MIN,Math.round((kwScale+d)*1000)/1000)); saveScale(KW_KEY,kwScale); updateKUI(); }
 $('kMinus').addEventListener('click',()=>bumpK(-0.01));
 $('kPlus').addEventListener('click',()=>bumpK(0.01));
+$('kwMinus').addEventListener('click',()=>bumpKW(-0.005));
+$('kwPlus').addEventListener('click',()=>bumpKW(0.005));
 updateKUI();
 updateQUI();
 window.addEventListener('resize',fitExpression);
@@ -270,12 +279,24 @@ window.addEventListener('orientationchange',()=>setTimeout(fitExpression,150));
 /* re-measure once Space Grotesk has loaded, so the first question is sized with the real font */
 if(document.fonts&&document.fonts.ready) document.fonts.ready.then(fitExpression);
 
+/* Display settings: tap to open / close the size controls */
+$('dispToggle').addEventListener('click',()=>{
+  const body=$('dispBody'); body.hidden=!body.hidden;
+  $('dispToggle').setAttribute('aria-expanded',String(!body.hidden));
+  $('dispToggle').classList.toggle('open',!body.hidden);
+  $('dd2Panel').classList.toggle('disp-open',!body.hidden);   /* hides No. of que / times while Display settings is open */
+});
+function resetDisp(){
+  $('dispBody').hidden=true; $('dispToggle').classList.remove('open');
+  $('dispToggle').setAttribute('aria-expanded','false'); $('dd2Panel').classList.remove('disp-open');
+}
+
 /* ---------- dropdowns ---------- */
 function syncDD(){
   $('dd1Btn').setAttribute('aria-expanded',String(!$('dd1Panel').hidden));
   $('dd2Btn').setAttribute('aria-expanded',String(!$('dd2Panel').hidden));
 }
-function closeDropdowns(){ $('dd1Panel').hidden=true; $('dd2Panel').hidden=true; syncDD(); }
+function closeDropdowns(){ $('dd1Panel').hidden=true; $('dd2Panel').hidden=true; resetDisp(); syncDD(); }
 function toggleDD(which){
   const panel=$(which+'Panel'), other=$(which==='dd1'?'dd2Panel':'dd1Panel');
   other.hidden=true; panel.hidden=!panel.hidden; syncDD();
@@ -503,11 +524,10 @@ function renderStats(){
 function showNext(){
   if(finished) return;
   if(index>=total){
-    /* leave the last answer's feedback on screen for a moment before the summary */
+    /* last question answered: show the summary immediately, no delay */
     if(!endedAt) endedAt=Date.now();
-    renderStats();   /* count the final answer straight away */
-    const sid=sessionId;
-    setTimeout(()=>{ if(sid===sessionId) finish(false); },900);
+    renderStats();
+    finish(false);
     return;
   }
   current=makeQuestion();
