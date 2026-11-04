@@ -440,3 +440,54 @@ body.in-practice .orb,body.in-practice .sym{animation:none}
 #dd2Panel .disp-toggle:active{background:var(--inset)}
 #dd2Panel .disp-toggle i{font-size:10px;opacity:.8}
 #dd2Panel.disp-open .disp-toggle,:root[data-theme="light"] #dd2Panel.disp-open .disp-toggle{display:none}
+/* ===== stat boxes: one size knob (--ss, 40–120 %) ===== */
+:root{--ss:1;--st-fs:26px;--st-pad-y:12px;--st-pad-x:14px;--st-mt:6px;--st-lb:10px}
+@media(max-width:560px){:root{--st-fs:22px}}
+@media(max-height:640px){:root{--st-fs:20px;--st-pad-y:8px;--st-pad-x:10px;--st-mt:2px}}
+body.in-practice .stats{gap:calc(10px * var(--ss))}
+body.in-practice .stats div{padding:calc(var(--st-pad-y) * var(--ss)) calc(var(--st-pad-x) * var(--ss));border-radius:calc(14px * var(--ss))}
+body.in-practice .stats span{font-size:calc(var(--st-lb) * var(--ss));letter-spacing:calc(1.2px * var(--ss))}
+body.in-practice .stats strong{font-size:calc(var(--st-fs) * var(--ss));margin-top:calc(var(--st-mt) * var(--ss));line-height:1.15}
+/* "No limit" clocks are hidden: the remaining boxes share the row, tidy and centred */
+.stats{transition:gap .15s}
+.stats.n3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.stats.n2{grid-template-columns:repeat(2,minmax(0,1fr));width:min(100%,460px);margin-inline:auto}
+body.in-practice .stats div{animation:statIn .25s ease both}
+@keyframes statIn{from{opacity:0;transform:translateY(-4px) scale(.97)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){body.in-practice .stats div{animation:none}}
+/* on a wide screen the card centres its content; keep the stats at the top so a smaller row really lifts the question */
+@media(min-width:561px){
+  body.in-practice .quiz-card#quiz{justify-content:flex-start}
+  body.in-practice #quiz .question-area{margin-block:auto;padding-top:calc(clamp(10px,4vh,36px) * var(--ss))}
+}
+
+/* ===== Display / Other settings: two small ghost links side by side + Back ===== */
+.set-links{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px}
+#dd2Panel .set-links .disp-toggle{margin:6px 0 2px}
+#dd2Panel.oth-open .set-row,#dd2Panel.oth-open .disp-toggle{display:none}
+#dd2Panel.oth-open .set-links{display:none}
+#dd2Panel.disp-open .set-links{display:none}
+.sub-back{display:block;margin:2px 0 4px;padding:4px 2px;border:0;background:transparent;color:var(--muted);font:700 12px Manrope,sans-serif;text-align:left}
+.sub-back:active{color:var(--accent)}
+@media(max-width:560px){ #dd2Panel .sub-back{grid-column:1/-1} #dd2Panel .set-links{grid-column:1/-1} }
+
+/* Other settings body */
+.colorctl{display:flex;align-items:stretch;width:150px;flex:none;height:38px;border:1px solid var(--line);border-radius:10px;background:var(--field);overflow:hidden}
+.colorctl input[type=color]{flex:none;width:40px;height:100%;padding:3px;border:0;border-right:1px solid var(--line);border-radius:0;background:transparent;cursor:pointer}
+.colorctl input[type=color]::-webkit-color-swatch-wrapper{padding:0}
+.colorctl input[type=color]::-webkit-color-swatch{border:0;border-radius:6px}
+.colorctl input[type=color]::-moz-color-swatch{border:0;border-radius:6px}
+.colorctl input[type=text]{flex:1;min-width:0;width:100%;height:100%;padding:0 6px;border:0;border-radius:0;background:transparent;outline:none;text-align:center;font:700 12.5px "Space Grotesk",sans-serif;letter-spacing:.4px;text-transform:uppercase;color:var(--text)}
+.colorctl:focus-within{border-color:var(--accent)}
+.kb-reset{display:block;margin:8px auto 2px;padding:5px 12px;border:1px dashed var(--line);border-radius:99px;background:transparent;color:var(--muted);font:600 11.5px Manrope,sans-serif}
+.kb-reset:active{background:var(--inset)}
+/* keypad colours only matter where the built-in keypad exists (phones) */
+#kbBgRow,#kbFgRow,#kbReset{display:none}
+@media(max-width:560px){
+  #kbBgRow,#kbFgRow{display:flex}
+  #kbReset{display:block}
+  #dd2Panel .oth-body{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #dd2Panel .oth-body .o-wide,#dd2Panel .oth-body .kb-reset{grid-column:1/-1}
+  #dd2Panel .oth-body .colorctl{width:100%;height:36px}
+  #dd2Panel .oth-body .colorctl input[type=text]{font-size:11.5px}
+}
